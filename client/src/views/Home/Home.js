@@ -40,12 +40,13 @@ function Home() {
     const searchTerm = e.target.value;
     const newData = [];
     dummyData.forEach(d => {
-      d.keywords.forEach(word => {
+      for (let i = 0; i < d.keywords.length; i++) {
+        const word = d.keywords[i];
         if (word.search(searchTerm) !== -1) {
           newData.push(d);
           break;
         }
-      });
+      }
     });
     setFilteredTools(newData);
   };

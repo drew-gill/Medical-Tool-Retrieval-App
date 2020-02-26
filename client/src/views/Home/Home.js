@@ -15,17 +15,38 @@ const RootContainer = styled.div`
   margin: 40px;
 `;
 
+const SearchBarForm = styled.form`
+  margin: 10px 0px;
+`;
+
 const ToolImage = styled.img`
-  width: auto;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 10px;
   &:hover {
     cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.05);
   }
 `;
 
 const dummyData = [
   {
     src: logo,
-    keywords: ['one', '1']
+    keywords: [
+      'one',
+      '1',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      'sdafgsadf',
+      'asdfasf',
+      'asdfasdfsdaf',
+      'asdfasf'
+    ]
   },
   {
     src: logo,
@@ -58,7 +79,7 @@ function Home() {
 
   return (
     <RootContainer>
-      <form noValidate>
+      <SearchBarForm noValidate>
         <TextField
           onChange={filterTools}
           label='Search'
@@ -77,7 +98,7 @@ function Home() {
             )
           }}
         />
-      </form>
+      </SearchBarForm>
       <Grid container>
         {filteredTools.map((d, index) => (
           <Grid item xs={4} key={index}>

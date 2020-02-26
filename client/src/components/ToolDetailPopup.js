@@ -21,8 +21,7 @@ const useStyles = makeStyles(theme => ({
     color: '#fff'
   },
   chip: {
-    marginLeft: 5,
-    marginRight: 5
+    margin: 5
   }
 }));
 
@@ -49,6 +48,7 @@ const KeywordContainer = styled.div`
   display: flex;
   justify-content: center;
   padding: 20px 0px;
+  flex-wrap: wrap;
 `;
 
 const ToolDetailPopup = ({ tool, isOpen, close }) => {
@@ -70,8 +70,13 @@ const ToolDetailPopup = ({ tool, isOpen, close }) => {
         <ToolImage src={src} />
         <Typography variant='h6'>Keywords</Typography>
         <KeywordContainer>
-          {keywords.map(word => (
-            <Chip label={word} className={classes.chip} color='secondary' />
+          {keywords.map((word, index) => (
+            <Chip
+              key={index}
+              label={word}
+              className={classes.chip}
+              color='secondary'
+            />
           ))}
         </KeywordContainer>
       </RootContainer>

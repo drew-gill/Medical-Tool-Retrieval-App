@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import logo from '../../assets/logo.svg';
-import './Home.css';
 import styled from 'styled-components';
 
 // Material UI

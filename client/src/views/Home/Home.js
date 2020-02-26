@@ -4,18 +4,22 @@ import './Home.css';
 import styled from 'styled-components';
 
 // Material UI
-import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchRounded from '@material-ui/icons/SearchRounded';
+import ToolDetailPopup from '../../components/ToolDetailPopup';
 
+// Styled components
 const RootContainer = styled.div`
   margin: 40px;
 `;
 
 const ToolImage = styled.img`
   width: auto;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const dummyData = [
@@ -35,6 +39,7 @@ const dummyData = [
 
 function Home() {
   const [filteredTools, setFilteredTools] = useState(dummyData);
+  const [selectedTool, setSelectedTool] = useState(null);
 
   const filterTools = e => {
     const searchTerm = e.target.value;
@@ -76,10 +81,15 @@ function Home() {
       <Grid container>
         {filteredTools.map((d, index) => (
           <Grid item xs={4} key={index}>
-            <ToolImage src={d.src} />
+            <ToolImage onClick={() => setSelectedTool(d)} src={d.src} />
           </Grid>
         ))}
       </Grid>
+      <ToolDetailPopup
+        tool={selectedTool}
+        isOpen={selectedTool !== null}
+        close={() => setSelectedTool(null)}
+      />
     </RootContainer>
   );
 }

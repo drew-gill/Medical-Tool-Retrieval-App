@@ -1,4 +1,5 @@
-const Example = require('../models/examples.server.model.js')
+const Tool = require('../models/ToolModel.js');
+const Retrieval = require('../models/RetrievalModel.js');
 
 exports.hello = function(req, res) {
     res.send('world')

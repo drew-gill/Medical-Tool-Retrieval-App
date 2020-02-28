@@ -10,6 +10,8 @@ let tool = {
     keywords: ['test1', 'test2', 'test3']
 }, id, db;
 
+let expectedImage = Buffer.from('test');
+
 describe('Tool Schema Unit Tests', () => {
     describe('Saving to database', () => {
 
@@ -40,8 +42,8 @@ describe('Tool Schema Unit Tests', () => {
                 expect(err).toBeNull();
                 id = tool._id;
                 expect(id).not.toBeNull();
-                expect(tool.image.data).toBe(Buffer("test".toString("binary"), "binary").data);
-                expect(tool.keywords).toBe(['test1', 'test2', 'test3']);
+                expect(Buffer.compare(tool.image, expectedImage)).toBe(0);
+                expect(Array.from(tool.keywords)).toMatchObject(['test1', 'test2', 'test3']);
                 done();
             });
         }, 10000);

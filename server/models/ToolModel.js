@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 */
 const toolSchema = new mongoose.Schema({
    image: {type: Buffer, required: true},
-   keywords: {type: [String], required: true},
+   keywords: {type: [String], required: true, default:undefined},
    //Check out - https://mongoosejs.com/docs/guide.html
 });
 

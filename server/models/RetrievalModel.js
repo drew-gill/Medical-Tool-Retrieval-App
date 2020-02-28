@@ -15,5 +15,7 @@ const mongoose = require('mongoose');
   /* Use your schema to instantiate a Mongoose model
   Export the model to make it avaiable to other parts of your Node application */
   //Check out - https://mongoosejs.com/docs/guide.html#models
-  exports.retrievals = mongoose.model('retrievals', retrievalSchema);
+  let Retrieval = mongoose.model('retrievals', retrievalSchema);
+
+  module.exports = Retrieval;
   

@@ -5,12 +5,10 @@ const mongoose = require('mongoose');
 const Tool = require('../models/ToolModel.js');
 const config = require('../config/config.js');
 
-let tool = {
+let toolInput = {
     image: 'test',
     keywords: ['test1', 'test2', 'test3']
-}, id, db;
-
-let expectedImage = Buffer.from('test');
+}, id, db, expectedImage = Buffer.from(toolInput.image);
 
 describe('Tool Schema Unit Tests', () => {
     describe('Saving to database', () => {
@@ -36,21 +34,21 @@ describe('Tool Schema Unit Tests', () => {
 
         test('saves properly when binary data and keywords provided', async (done) => {
             await new Tool({
-                image: tool.image,
-                keywords: tool.keywords
-            }).save((err, tool) => {
+                image: toolInput.image,
+                keywords: toolInput.keywords
+            }).save((err, toolSave) => {
                 expect(err).toBeNull();
-                id = tool._id;
+                id = toolSave._id;
                 expect(id).not.toBeNull();
-                expect(Buffer.compare(tool.image, expectedImage)).toBe(0);
-                expect(Array.from(tool.keywords)).toMatchObject(['test1', 'test2', 'test3']);
+                expect(Buffer.compare(toolSave.image, expectedImage)).toBe(0);
+                expect(Array.from(toolSave.keywords)).toMatchObject(toolInput.keywords);
                 done();
             });
         }, 10000);
 
         test('throws an error when image not provided', async (done) => {
             await new Tool({
-                keywords: tool.keywords
+                keywords: toolInput.keywords
             }).save(err => {
                 expect(err).not.toBeNull();
                 done();
@@ -59,7 +57,7 @@ describe('Tool Schema Unit Tests', () => {
 
         test('throws an error when keywords not provided', async (done) => {
             await new Tool({
-                image: tool.image
+                image: toolInput.image
             }).save((err) => {
                 expect(err).not.toBeNull();
                 done();

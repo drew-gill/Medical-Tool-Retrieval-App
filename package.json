@@ -4,7 +4,7 @@
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "index.js",
   "scripts": {
-    "test": "cd server && jest tools.server.model.test.js",
+    "test": "cd server && jest tools.server.model.test.js && jest retrievals.server.model.test.js",
     "testMocha": "mocha server/tests",
     "install-all": "concurrently \"npm install\" \"cd client && npm install\"",
     "client": "cd client && npm start",

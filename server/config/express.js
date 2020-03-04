@@ -3,8 +3,9 @@ const path = require('path'),
     mongoose = require('mongoose'),
     morgan = require('morgan'),
     bodyParser = require('body-parser'),
-    exampleRouter = require('../routes/examples.server.routes');
-
+    toolsRouter = require('../routes/toolsRouter.js'),
+    multer = require('multer');
+    
 module.exports.init = () => {
     /* 
         connect to database
@@ -21,12 +22,13 @@ module.exports.init = () => {
 
     // enable request logging for development debugging
     app.use(morgan('dev'));
-
+   
     // body parsing middleware
     app.use(bodyParser.json());
-
-    // add a router
-    app.use('/api/example', exampleRouter);
+    app.use(bodyParser.urlencoded({ extended: true }));
+    
+    app.use('/', toolsRouter);
+    
 
     if (process.env.NODE_ENV === 'production') {
         // Serve any static files

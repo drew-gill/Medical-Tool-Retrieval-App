@@ -20,15 +20,12 @@ module.exports.init = () => {
     // initialize app
     const app = express();
 
-<<<<<<< HEAD
     //
     app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
         next();
       });
       
-=======
->>>>>>> fe7064f90cabf70fd6e5ac000e7db442f0a1e258
     // enable request logging for development debugging
     app.use(morgan('dev'));
    

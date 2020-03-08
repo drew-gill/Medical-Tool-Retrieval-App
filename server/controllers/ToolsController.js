@@ -17,10 +17,6 @@ exports.create = async (req, res) => {
     })
 };
 exports.read = (req, res) => {
-<<<<<<< HEAD
-=======
-    
->>>>>>> fe7064f90cabf70fd6e5ac000e7db442f0a1e258
     if(typeof req.query.id != "undefined"){
         Tool.findById(req.query.id).lean()
         .then(tool=>{
@@ -36,10 +32,6 @@ exports.read = (req, res) => {
   
 };
 exports.update = (req,res)=>{
-<<<<<<< HEAD
-=======
-    console.log(req);
->>>>>>> fe7064f90cabf70fd6e5ac000e7db442f0a1e258
     
     
     Tool.findById({"_id":req.query.id}).then(tool=>{

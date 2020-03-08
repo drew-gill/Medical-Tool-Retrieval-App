@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
+=======
+import React, { useState } from 'react';
+>>>>>>> fe7064f90cabf70fd6e5ac000e7db442f0a1e258
 import logo from '../../assets/logo.svg';
 import styled from 'styled-components';
 
@@ -8,7 +12,10 @@ import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchRounded from '@material-ui/icons/SearchRounded';
 import ToolDetailPopup from '../../components/ToolDetailPopup';
+<<<<<<< HEAD
 import db from '../../dbcall';
+=======
+>>>>>>> fe7064f90cabf70fd6e5ac000e7db442f0a1e258
 
 // Styled components
 const RootContainer = styled.div`
@@ -59,6 +66,7 @@ const dummyData = [
 ];
 
 function Home() {
+<<<<<<< HEAD
   const [data, setData] = useState(null);
   const [filteredTools, setFilteredTools] = useState(dummyData);
   const [selectedTool, setSelectedTool] = useState(null);
@@ -79,6 +87,11 @@ function Home() {
   }
 
 
+=======
+  const [filteredTools, setFilteredTools] = useState(dummyData);
+  const [selectedTool, setSelectedTool] = useState(null);
+
+>>>>>>> fe7064f90cabf70fd6e5ac000e7db442f0a1e258
   const filterTools = e => {
     const searchTerm = e.target.value;
     const newData = [];

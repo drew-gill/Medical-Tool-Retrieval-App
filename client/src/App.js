@@ -4,7 +4,11 @@ import Home from './views/Home/Home';
 import NotFound from './views/NotFound';
 import NavBar from './components/Header/NavBar';
 
+<<<<<<< HEAD
 const App = (props) => {
+=======
+const App = () => {
+>>>>>>> fe7064f90cabf70fd6e5ac000e7db442f0a1e258
   return (
     <div>
       {/* <NavBar /> */}

@@ -9,7 +9,7 @@ exports.create = async (req, res) => {
         });
     }
     
-    var img = fs.readFileSync(req.file.path);
+    var img = req.file.buffer;
     tool = new Tool({"image":img,"keywords":req.body.keywords})
     tool.save()
     .then(data=>{
@@ -37,8 +37,8 @@ exports.update = (req,res)=>{
     
     
     Tool.findById({"_id":req.query.id}).then(tool=>{
-        if(typeof(req.file.path) != "undefined"){
-        var img = fs.readFileSync(req.file.path);
+        if(typeof(req.file.buffer) != "undefined"){
+        var img = req.file.buffer;
         tool.image = img;
         }
         if(typeof(req.body.keywords) != "undefined"){

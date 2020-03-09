@@ -17,7 +17,6 @@ describe('Tool Schema Unit Tests', () => {
             db = await mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
             await mongoose.set('useCreateIndex', true);
             await mongoose.set('useFindAndModify', false);
-            console.log(`established connection to db at uri: ${config.db.uri}!`);
         });
 
         afterEach(async () => {

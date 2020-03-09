@@ -22,10 +22,7 @@
   "author": "Dakota Rennemann",
   "license": "MIT",
   "dependencies": {
-<<<<<<< HEAD
     "axios": "^0.19.2",
-=======
->>>>>>> fe7064f90cabf70fd6e5ac000e7db442f0a1e258
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "mocha": "^6.2.1",

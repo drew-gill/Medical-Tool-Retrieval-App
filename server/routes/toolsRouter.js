@@ -1,24 +1,11 @@
 const toolController = require('../controllers/ToolsController.js'),
     express = require('express'), 
     toolsRouter = express.Router(),
-    multer = require('multer'),
-    fs = require('fs');
+    multer = require('multer');
 
-/* 
-  These method calls are responsible for routing requests to the correct request handler.
-  Take note that it is possible for different controller functions to handle requests to the same route.
- 
-  Note: the listings variable above and the file it is connected to help you trace
- */
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, '/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now()+'-'+file.originalname);
-    }
-});
-const upload = multer({storage});
+
+const storage = multer.memoryStorage();
+const upload = multer({storage:storage});
 
 //creates a new object in the DB with the upload buffer object (the image with the filepath specified in a file parameter of the request) and the keywords in the request
 toolsRouter.post('/',upload.single('image'), toolController.create);

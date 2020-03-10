@@ -1,179 +1,82 @@
 import React, { useState, useEffect } from 'react';
-import logo from '../../assets/logo.svg';
 import styled from 'styled-components';
 
 // Material UI
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import SearchRounded from '@material-ui/icons/SearchRounded';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+// Custom components
 import ToolDetailPopup from '../../components/ToolDetailPopup';
-import db from '../../dbcall';
-import AddToolPopup from '../../components/AddToolPopup';
-import Button from '@material-ui/core/Button';
+import FilterAndViewComponent from '../../components/FilterAndViewComponent';
+import AddToolComponent from '../../components/AddToolComponent';
+import { readAllTools, deleteTool, createTool } from '../../apiCalls';
 
 // Styled components
 const RootContainer = styled.div`
   margin: 40px;
 `;
 
-const SearchBarForm = styled.form`
-  margin: 10px 0px;
+const LoadingContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
-
-const ToolImage = styled.img`
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-  border-radius: 10px;
-  &:hover {
-    cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-`;
-
-let dummyData = [
-  {
-    src: logo,
-    keywords: [
-      'one',
-      '1',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      'sdafgsadf',
-      'asdfasf',
-      'asdfasdfsdaf',
-      'asdfasf'
-    ]
-  },
-  {
-    src: logo,
-    keywords: ['two', '2']
-  },
-  {
-    src: logo,
-    keywords: ['three', '3']
-  }
-];
 
 function Home() {
   const [data, setData] = useState(null);
-  const [filteredTools, setFilteredTools] = useState(dummyData);
   const [selectedTool, setSelectedTool] = useState(null);
 
+  useEffect(() => {
+    const fetch = async () => {
+      const res = await readAllTools();
+      setData(res);
+    };
+    fetch();
+  }, []);
 
-  //constantly calls getData
-  useEffect( () => {
-    if (!data) {
-      getData();
-    }
-  })
-
-  //async db call
-  const getData = async () => {
-    let res = await db.getData();
-    console.log(res);
-    setData(res);
-  }
-
-  // Used to control opening up popup of adding a tool
-  const [open,setOpen] = React.useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  }
-  const handleClose = () => {
-    setOpen(false);
+  const addTool = async (image, keywords) => {
+    const newTool = await createTool(image, keywords);
+    const newData = data;
+    newData.push(newTool);
+    setData(newData);
   };
-  const addToDummy = () => {
-    let obj = {};
-    obj['src'] = logo;
-    obj['keywords'] = ['testing if this works', 'abc'];
-    //for (let i = 0; i < 2000; i++) {
-      dummyData.push(obj);
-    //}
-    setOpen(false);
-  };
-  // End of control add tool (will come back to clean this area too, AddToolPopup component is now working)
 
-  // Delete a tool (in the future use mongoose ID)
-  const deleteFromDummy = (data) => {
-    //console.log("inside of delete from dummy!!!");
-    //console.log("the data is: ", {data});
-    const filterItems = dummyData.filter(function(item) {
-      //console.log(item);
-      return item !== data;
-    });
-    //console.log(filterItems);
-    dummyData = filterItems;
-    setFilteredTools(dummyData);
-    // Small hack to clear search field, in textfield "id='search'"
-    document.getElementById('search').value = ''
-  };
-  // End of delete
-
-  const filterTools = e => {
-    const searchTerm = e.target.value;
+  const removeTool = async id => {
+    await deleteTool(id);
+    // Update the actual data
     const newData = [];
-    dummyData.forEach(d => {
-      for (let i = 0; i < d.keywords.length; i++) {
-        const word = d.keywords[i];
-        if (word.search(searchTerm) !== -1) {
-          newData.push(d);
-          break;
-        }
+    data.forEach(d => {
+      if (d._id !== id) {
+        newData.push(d);
       }
     });
-    setFilteredTools(newData);
+    setData(newData);
   };
+
+  const selectTool = item => {
+    setSelectedTool(item);
+  };
+
+  if (data === null) {
+    return (
+      <LoadingContainer>
+        <CircularProgress />
+      </LoadingContainer>
+    );
+  }
 
   return (
     <RootContainer>
-      <SearchBarForm noValidate>
-        <TextField
-          onChange={filterTools}
-          label='Search'
-          placeholder='Type to search...'
-          type='search'
-          autoCorrect='off'
-          autoCapitalize='off'
-          autoComplete='off'
-          spellCheck='false'
-          id='search'
-          fullWidth
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position='start'>
-                <SearchRounded />
-              </InputAdornment>
-            )
-          }}
-        />
-      </SearchBarForm>
+      <FilterAndViewComponent data={data} selectFunction={selectTool} />
 
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        Upload A New Tool
-      </Button>
-      <AddToolPopup
-        open={open}
-        handleClose={handleClose}
-        addToDummy={addToDummy}
-      />
-      <Grid container>
-        {filteredTools.map((d, index) => (
-          <Grid item xs={4} key={index}>
-            <ToolImage onClick={() => setSelectedTool(d)} src={d.src} />
-          </Grid>
-        ))}
-      </Grid>
+      <AddToolComponent createFunction={addTool} />
+
       <ToolDetailPopup
         tool={selectedTool}
         isOpen={selectedTool !== null}
         close={() => setSelectedTool(null)}
-        deleteFromDummy={deleteFromDummy}
+        deleteFunction={removeTool}
       />
     </RootContainer>
   );

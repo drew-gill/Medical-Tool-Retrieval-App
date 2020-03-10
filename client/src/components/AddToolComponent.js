@@ -83,6 +83,16 @@ const AddToolComponent = ({ createFunction }) => {
     setKeyInputValue(e.target.value);
   };
 
+  const handleDeleteKeyword = keyword => {
+    const newKeywords = [];
+    keywords.forEach(k => {
+      if (k !== keyword) {
+        newKeywords.push(k);
+      }
+    });
+    setKeywords(newKeywords);
+  };
+
   return (
     <React.Fragment>
       {/* Button */}
@@ -151,6 +161,7 @@ const AddToolComponent = ({ createFunction }) => {
                 label={word}
                 className={classes.chip}
                 color='secondary'
+                onDelete={() => handleDeleteKeyword(word)}
               />
             ))}
           </KeywordContainer>

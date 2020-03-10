@@ -23,7 +23,7 @@ const LoadingContainer = styled.div`
   justify-content: center;
 `;
 
-function Home() {
+const Home = () => {
   const [data, setData] = useState(null);
   const [selectedTool, setSelectedTool] = useState(null);
 
@@ -37,14 +37,11 @@ function Home() {
 
   const addTool = async (image, keywords) => {
     const newTool = await createTool(image, keywords);
-    const newData = data;
-    newData.push(newTool);
-    setData(newData);
+    setData([...data, newTool]);
   };
 
   const removeTool = async id => {
     await deleteTool(id);
-    // Update the actual data
     const newData = [];
     data.forEach(d => {
       if (d._id !== id) {
@@ -80,6 +77,6 @@ function Home() {
       />
     </RootContainer>
   );
-}
+};
 
 export default Home;

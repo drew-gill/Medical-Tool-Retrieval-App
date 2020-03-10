@@ -3,6 +3,7 @@ import axios from 'axios';
 const devUrl = 'http://localhost:5000/api/';
 
 const getUrl = () => {
+  console.log(process.env);
   return process.env.API_URL || devUrl;
 };
 

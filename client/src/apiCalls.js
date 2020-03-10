@@ -13,7 +13,8 @@ const getUrl = () => {
 
 const readAllTools = async () => {
   const res = await axios.get(getUrl());
-  return res.data || [];
+  const { data } = res;
+  return data || [];
 };
 
 const deleteTool = async id => {
@@ -25,6 +26,13 @@ const createTool = async (image, keywords) => {
   formData.append('image', image);
   formData.append('keywords', JSON.stringify(keywords));
   const res = await axios.post(getUrl(), formData);
+  const { data } = res;
+  const tool = await readTool(data._id);
+  return tool;
+};
+
+const readTool = async id => {
+  const res = await axios.get(`${getUrl()}?id=${id}`);
   return res.data;
 };
 

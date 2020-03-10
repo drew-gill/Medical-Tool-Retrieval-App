@@ -7,11 +7,10 @@ import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchRounded from '@material-ui/icons/SearchRounded';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Button from '@material-ui/core/Button';
 
 // Custom components
 import ToolDetailPopup from '../../components/ToolDetailPopup';
-import AddToolPopup from '../../components/AddToolPopup';
+import AddToolComponent from '../../components/AddToolComponent';
 import { readAllTools, deleteTool, createTool } from '../../apiCalls';
 
 // Styled components
@@ -60,17 +59,14 @@ function Home() {
     fetch();
   }, []);
 
-  // Used to control opening up popup of adding a tool
-  const [open, setOpen] = React.useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const addTool = async (image, keywords) => {
-    await createTool(image, keywords);
+    const newTool = await createTool(image, keywords);
+    const newData = data;
+    newData.push(newTool);
+    setData(newData);
+    const newFilteredTools = filteredTools;
+    newFilteredTools.push(newTool);
+    setFilteredTools(newFilteredTools);
   };
 
   const removeTool = async id => {
@@ -140,17 +136,7 @@ function Home() {
         />
       </SearchBarForm>
 
-      <Button variant='contained' color='primary' onClick={handleClickOpen}>
-        Upload A New Tool
-      </Button>
-
-      <AddToolPopup
-        open={open}
-        handleClose={handleClose}
-        createFunction={image =>
-          addTool(image, ['demo-keyword', 'for-demo-purposes-only'])
-        }
-      />
+      <AddToolComponent createFunction={addTool} />
 
       <Grid container alignContent='stretch'>
         {filteredTools.map((d, index) => (

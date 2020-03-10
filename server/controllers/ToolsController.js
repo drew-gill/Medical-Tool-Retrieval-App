@@ -9,7 +9,7 @@ exports.create = async (req, res) => {
   }
 
   var img = req.file.buffer;
-  tool = new Tool({ image: img, keywords: req.body.keywords });
+  tool = new Tool({ image: img, keywords: JSON.parse(req.body.keywords) });
   tool.save().then(data => {
     res.send(data);
   });

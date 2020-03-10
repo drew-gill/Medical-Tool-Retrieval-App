@@ -1,3 +1,5 @@
+// Note: Took this component and moved it into a separate file called 'AddToolComponent'.
+
 import React, { useState } from 'react';
 
 // Material UI

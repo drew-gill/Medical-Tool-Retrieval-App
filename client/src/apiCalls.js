@@ -26,8 +26,9 @@ const deleteTool = async id => {
 const createTool = async (image, keywords) => {
   let formData = new FormData();
   formData.append('image', image);
-  formData.append('keywords', keywords);
-  await axios.post(URL, formData);
+  formData.append('keywords', JSON.stringify(keywords));
+  const res = await axios.post(URL, formData);
+  return res.data;
 };
 
 export { readAllTools, deleteTool, createTool };

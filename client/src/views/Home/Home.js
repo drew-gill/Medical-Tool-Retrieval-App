@@ -7,10 +7,11 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchRounded from '@material-ui/icons/SearchRounded';
-import ToolDetailPopup from '../../components/ToolDetailPopup';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 
 // Custom components
+import ToolDetailPopup from '../../components/ToolDetailPopup';
 import AddToolPopup from '../../components/AddToolPopup';
 import { readAllTools, deleteTool, createTool } from '../../apiCalls';
 
@@ -118,16 +119,22 @@ function Home() {
         }
       />
 
-      <Grid container>
-        {filteredTools.map((d, index) => (
-          <Grid item xs={4} key={index}>
-            <ToolImage
-              onClick={() => setSelectedTool(d)}
-              src={`data:image/jpg;base64, ${d.image.toString('base64')}`}
-            />
-          </Grid>
-        ))}
-      </Grid>
+      {data !== null ? (
+        <Grid container>
+          {filteredTools.map((d, index) => (
+            <Grid item xs={4} key={index}>
+              <ToolImage
+                onClick={() => setSelectedTool(d)}
+                src={`data:image/jpg;base64, ${d.image.toString('base64')}`}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <div>
+          <CircularProgress />
+        </div>
+      )}
 
       <ToolDetailPopup
         tool={selectedTool}

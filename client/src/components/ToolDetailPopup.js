@@ -9,8 +9,6 @@ import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
 import CloseRounded from '@material-ui/icons/CloseRounded';
-
-// Delete Button from Material UI
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -35,15 +33,24 @@ const RootContainer = styled(Paper)`
   height: 80vh;
   overflow-y: auto;
   position: relative;
+  margin: 40px;
+`;
+
+const Container = styled.div`
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  margin: 40px 0px;
 `;
 
 const ToolImage = styled.img`
-  width: 100%;
-  max-width: 80vh;
+  width: 80%;
+  height: 70vh;
+  object-fit: cover;
   display: relative;
+  padding-bottom: 10px;
 `;
 
 const KeywordContainer = styled.div`
@@ -78,26 +85,28 @@ const ToolDetailPopup = ({ tool, isOpen, close, deleteFunction }) => {
         <IconButton className={classes.closeButton} onClick={close}>
           <CloseRounded />
         </IconButton>
-        <ToolImage src={src} />
-        <Typography variant='h6'>Keywords</Typography>
-        <KeywordContainer>
-          {keywords.map((word, index) => (
-            <Chip
-              key={index}
-              label={word}
-              className={classes.chip}
-              color='secondary'
-            />
-          ))}
-        </KeywordContainer>
-        <Button
-          variant='contained'
-          color='default'
-          startIcon={<DeleteIcon />}
-          onClick={() => deleteTool()}
-        >
-          Delete
-        </Button>
+        <Container>
+          <ToolImage src={src} />
+          <Typography variant='h6'>Keywords</Typography>
+          <KeywordContainer>
+            {keywords.map((word, index) => (
+              <Chip
+                key={index}
+                label={word}
+                className={classes.chip}
+                color='secondary'
+              />
+            ))}
+          </KeywordContainer>
+          <Button
+            variant='text'
+            color='secondary'
+            startIcon={<DeleteIcon />}
+            onClick={deleteTool}
+          >
+            Delete
+          </Button>
+        </Container>
       </RootContainer>
     </Backdrop>
   );

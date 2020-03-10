@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import logo from '../../assets/logo.svg';
 import styled from 'styled-components';
 
 // Material UI

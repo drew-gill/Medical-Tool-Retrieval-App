@@ -17,7 +17,6 @@ exports.create = async (req, res) => {
     })
 };
 exports.read = (req, res) => {
-    
     if(typeof req.query.id != "undefined"){
         Tool.findById(req.query.id).lean()
         .then(tool=>{
@@ -33,7 +32,6 @@ exports.read = (req, res) => {
   
 };
 exports.update = (req,res)=>{
-    console.log(req);
     
     
     Tool.findById({"_id":req.query.id}).then(tool=>{

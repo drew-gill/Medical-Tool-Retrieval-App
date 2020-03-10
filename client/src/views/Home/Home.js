@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from '../../assets/logo.svg';
 import styled from 'styled-components';
 
@@ -8,6 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchRounded from '@material-ui/icons/SearchRounded';
 import ToolDetailPopup from '../../components/ToolDetailPopup';
+import db from '../../dbcall';
 import AddToolPopup from '../../components/AddToolPopup';
 import Button from '@material-ui/core/Button';
 
@@ -60,8 +61,24 @@ let dummyData = [
 ];
 
 function Home() {
+  const [data, setData] = useState(null);
   const [filteredTools, setFilteredTools] = useState(dummyData);
   const [selectedTool, setSelectedTool] = useState(null);
+
+
+  //constantly calls getData
+  useEffect( () => {
+    if (!data) {
+      getData();
+    }
+  })
+
+  //async db call
+  const getData = async () => {
+    let res = await db.getData();
+    console.log(res);
+    setData(res);
+  }
 
   // Used to control opening up popup of adding a tool
   const [open,setOpen] = React.useState(false);

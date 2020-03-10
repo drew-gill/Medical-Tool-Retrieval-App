@@ -20,19 +20,31 @@ const RootContainer = styled.div`
   margin: 40px;
 `;
 
+const LoadingContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const SearchBarForm = styled.form`
   margin: 10px 0px;
 `;
 
-const ToolImage = styled.img`
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-  border-radius: 10px;
+const GridItem = styled(Grid)`
   &:hover {
     cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.1);
   }
+`;
+
+const ToolImage = styled.img`
+  width: 100%;
+  height: 300px;
+  padding: 10px;
+  box-sizing: border-box;
+  object-fit: cover;
 `;
 
 function Home() {
@@ -83,6 +95,14 @@ function Home() {
     setFilteredTools(newData);
   };
 
+  if (data === null) {
+    return (
+      <LoadingContainer>
+        <CircularProgress />
+      </LoadingContainer>
+    );
+  }
+
   return (
     <RootContainer>
       <SearchBarForm noValidate>
@@ -119,22 +139,15 @@ function Home() {
         }
       />
 
-      {data !== null ? (
-        <Grid container>
-          {filteredTools.map((d, index) => (
-            <Grid item xs={4} key={index}>
-              <ToolImage
-                onClick={() => setSelectedTool(d)}
-                src={`data:image/jpg;base64, ${d.image.toString('base64')}`}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      ) : (
-        <div>
-          <CircularProgress />
-        </div>
-      )}
+      <Grid container alignContent='stretch'>
+        {filteredTools.map((d, index) => (
+          <GridItem item xs={4} key={d._id} onClick={() => setSelectedTool(d)}>
+            <ToolImage
+              src={`data:image/jpg;base64, ${d.image.toString('base64')}`}
+            />
+          </GridItem>
+        ))}
+      </Grid>
 
       <ToolDetailPopup
         tool={selectedTool}

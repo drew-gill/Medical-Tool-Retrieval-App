@@ -16,21 +16,18 @@ const URL = devUrl;
 
 const readAllTools = async () => {
   const res = await axios.get(URL);
-  console.log(res);
   return res.data || [];
 };
 
 const deleteTool = async id => {
-  const res = await axios.delete(`${URL}?id=${id}`);
-  console.log('Successful delete.');
+  await axios.delete(`${URL}?id=${id}`);
 };
 
 const createTool = async (image, keywords) => {
   let formData = new FormData();
   formData.append('image', image);
   formData.append('keywords', keywords);
-  const res = await axios.post(URL, formData);
-  console.log('Successful create.');
+  await axios.post(URL, formData);
 };
 
 export { readAllTools, deleteTool, createTool };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 // Material UI
@@ -11,6 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseRounded from '@material-ui/icons/CloseRounded';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Styles
 const useStyles = makeStyles(theme => ({
@@ -64,10 +65,13 @@ const KeywordContainer = styled.div`
 
 const ToolDetailPopup = ({ tool, isOpen, close, deleteFunction }) => {
   const classes = useStyles();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Helper function to delete the tool and then close the popup
-  const deleteTool = () => {
-    deleteFunction(tool._id);
+  const deleteTool = async () => {
+    setIsDeleting(true);
+    await deleteFunction(tool._id);
+    setIsDeleting(false);
     close();
   };
 
@@ -98,14 +102,18 @@ const ToolDetailPopup = ({ tool, isOpen, close, deleteFunction }) => {
               />
             ))}
           </KeywordContainer>
-          <Button
-            variant='text'
-            color='secondary'
-            startIcon={<DeleteIcon />}
-            onClick={deleteTool}
-          >
-            Delete
-          </Button>
+          {isDeleting ? (
+            <CircularProgress />
+          ) : (
+            <Button
+              variant='text'
+              color='secondary'
+              startIcon={<DeleteIcon />}
+              onClick={deleteTool}
+            >
+              Delete
+            </Button>
+          )}
         </Container>
       </RootContainer>
     </Backdrop>

@@ -75,8 +75,22 @@ function Home() {
 
   const removeTool = async id => {
     await deleteTool(id);
-    const res = await readAllTools();
-    setData(res);
+    // Update the actual data
+    const newData = [];
+    data.forEach(d => {
+      if (d._id !== id) {
+        newData.push(d);
+      }
+    });
+    setData(newData);
+    // Update the data that is displayed
+    const newFilteredTools = [];
+    filteredTools.forEach(d => {
+      if (d._id !== id) {
+        newFilteredTools.push(d);
+      }
+    });
+    setFilteredTools(newFilteredTools);
   };
 
   const filterTools = e => {

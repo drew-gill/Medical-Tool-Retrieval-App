@@ -5,18 +5,19 @@ exports.create = async (req, res) => {
     
     if(!req.file) {
         return res.status(200).send({
-            error: "You can't create an empty Tool!"
+            error: "You can't create an empty Listing!"
         });
     }
     
-    tool = new Tool({"image":req.file.buffer,"keywords":req.body.keywords})
+    var img = fs.readFileSync(req.file.path);
+    tool = new Tool({"image":img,"keywords":req.body.keywords})
     tool.save()
     .then(data=>{
         res.send(data);
     })
 };
 exports.read = (req, res) => {
-    console.log(req);
+    
     if(typeof req.query.id != "undefined"){
         Tool.findById(req.query.id).lean()
         .then(tool=>{
@@ -32,9 +33,13 @@ exports.read = (req, res) => {
   
 };
 exports.update = (req,res)=>{
+    console.log(req);
+    
+    
     Tool.findById({"_id":req.query.id}).then(tool=>{
-        if(typeof(req.file.buffer) != "undefined"){
-        tool.image = req.file.buffer;
+        if(typeof(req.file.path) != "undefined"){
+        var img = fs.readFileSync(req.file.path);
+        tool.image = img;
         }
         if(typeof(req.body.keywords) != "undefined"){
         tool.keywords = req.body.keywords;

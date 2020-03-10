@@ -1,10 +1,14 @@
 import axios from 'axios';
 
 const devUrl = 'http://localhost:5000/api/';
+const prodUrl = 'https://cen3031-final-project.herokuapp.com/api/';
 
 const getUrl = () => {
-  console.log(process.env);
-  return process.env.API_URL || devUrl;
+  if (process.env.NODE_ENV === 'production') {
+    return prodUrl;
+  } else {
+    return devUrl;
+  }
 };
 
 const readAllTools = async () => {

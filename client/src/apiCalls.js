@@ -14,9 +14,20 @@ const URL = devUrl;
 //   }
 // };
 
-const fetchAllTools = async () => {
+const readAllTools = async () => {
   const res = await axios.get(URL);
+  console.log(res);
   return res.data || [];
 };
 
-export { fetchAllTools };
+const deleteTool = async id => {
+  const res = await axios.delete(`${URL}?id=${id}`);
+  console.log('Successful delete.');
+};
+
+const createTool = async (image, keywords) => {
+  const res = await axios.post(URL, { file: image, keywords });
+  console.log('Successful create.');
+};
+
+export { readAllTools, deleteTool, createTool };

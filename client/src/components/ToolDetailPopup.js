@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 const RootContainer = styled(Paper)`
   width: 80vw;
   height: 80vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -55,14 +55,12 @@ const KeywordContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-const ToolDetailPopup = ({ tool, isOpen, close, deleteFromDummy }) => {
+const ToolDetailPopup = ({ tool, isOpen, close, deleteFunction }) => {
   const classes = useStyles();
 
   // Helper function to delete the tool and then close the popup
   const deleteTool = () => {
-    // console.log("deleting a tool");
-    // console.log("The tool is", {tool: src}, " keywords are: ", {tool: keywords});
-    deleteFromDummy(tool);
+    deleteFunction(tool._id);
     close();
   };
 
@@ -71,7 +69,8 @@ const ToolDetailPopup = ({ tool, isOpen, close, deleteFromDummy }) => {
     return <React.Fragment></React.Fragment>;
   }
 
-  const { src, keywords } = tool;
+  const { image, keywords } = tool;
+  const src = `data:image/jpg;base64, ${image.toString('base64')}`;
 
   return (
     <Backdrop open={isOpen} className={classes.backdrop}>
@@ -91,7 +90,12 @@ const ToolDetailPopup = ({ tool, isOpen, close, deleteFromDummy }) => {
             />
           ))}
         </KeywordContainer>
-        <Button variant="contained" color="default" className={classes.button} startIcon={<DeleteIcon />} onClick={() => deleteTool()}>
+        <Button
+          variant='contained'
+          color='default'
+          startIcon={<DeleteIcon />}
+          onClick={() => deleteTool()}
+        >
           Delete
         </Button>
       </RootContainer>

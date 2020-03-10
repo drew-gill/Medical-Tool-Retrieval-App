@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 
 // Custom components
 import AddToolPopup from '../../components/AddToolPopup';
-import { fetchAllTools } from '../../apiCalls';
+import { readAllTools, deleteTool, createTool } from '../../apiCalls';
 
 // Styled components
 const RootContainer = styled.div`
@@ -41,7 +41,7 @@ function Home() {
 
   useEffect(() => {
     const fetch = async () => {
-      const res = await fetchAllTools();
+      const res = await readAllTools();
       setData(res);
       setFilteredTools(res);
     };
@@ -56,32 +56,16 @@ function Home() {
   const handleClose = () => {
     setOpen(false);
   };
-  const addToDummy = () => {
-    let obj = {};
-    obj['src'] = logo;
-    obj['keywords'] = ['testing if this works', 'abc'];
-    //for (let i = 0; i < 2000; i++) {
-    data.push(obj);
-    //}
-    setOpen(false);
-  };
-  // End of control add tool (will come back to clean this area too, AddToolPopup component is now working)
 
-  // Delete a tool (in the future use mongoose ID)
-  const deleteFromDummy = data => {
-    //console.log("inside of delete from dummy!!!");
-    //console.log("the data is: ", {data});
-    const filterItems = data.filter(function(item) {
-      //console.log(item);
-      return item !== data;
-    });
-    //console.log(filterItems);
-    data = filterItems;
-    setFilteredTools(data);
-    // Small hack to clear search field, in textfield "id='search'"
-    document.getElementById('search').value = '';
+  const addTool = async (image, keywords) => {
+    await createTool(image, keywords);
   };
-  // End of delete
+
+  const removeTool = async id => {
+    await deleteTool(id);
+    const res = await readAllTools();
+    setData(res);
+  };
 
   const filterTools = e => {
     const searchTerm = e.target.value;
@@ -129,7 +113,9 @@ function Home() {
       <AddToolPopup
         open={open}
         handleClose={handleClose}
-        addToDummy={addToDummy}
+        createFunction={image =>
+          addTool(image, ['demo-keyword', 'for-demo-purposes-only'])
+        }
       />
 
       <Grid container>
@@ -147,7 +133,7 @@ function Home() {
         tool={selectedTool}
         isOpen={selectedTool !== null}
         close={() => setSelectedTool(null)}
-        deleteFromDummy={deleteFromDummy}
+        deleteFunction={removeTool}
       />
     </RootContainer>
   );

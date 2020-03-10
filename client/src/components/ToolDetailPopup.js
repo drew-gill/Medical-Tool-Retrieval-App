@@ -10,6 +10,10 @@ import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
 import CloseRounded from '@material-ui/icons/CloseRounded';
 
+// Delete Button from Material UI
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 // Styles
 const useStyles = makeStyles(theme => ({
   closeButton: {
@@ -51,8 +55,16 @@ const KeywordContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-const ToolDetailPopup = ({ tool, isOpen, close }) => {
+const ToolDetailPopup = ({ tool, isOpen, close, deleteFromDummy }) => {
   const classes = useStyles();
+
+  // Helper function to delete the tool and then close the popup
+  const deleteTool = () => {
+    // console.log("deleting a tool");
+    // console.log("The tool is", {tool: src}, " keywords are: ", {tool: keywords});
+    deleteFromDummy(tool);
+    close();
+  };
 
   // Prevent false render
   if (tool === null) {
@@ -79,6 +91,9 @@ const ToolDetailPopup = ({ tool, isOpen, close }) => {
             />
           ))}
         </KeywordContainer>
+        <Button variant="contained" color="default" className={classes.button} startIcon={<DeleteIcon />} onClick={() => deleteTool()}>
+          Delete
+        </Button>
       </RootContainer>
     </Backdrop>
   );

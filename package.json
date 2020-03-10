@@ -1,10 +1,11 @@
 {
-  "name": "react_template_repo",
+  "name": "react_server_package",
   "version": "1.0.0",
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "index.js",
   "scripts": {
     "test": "cd server && jest tools.server.model.test.js && jest retrievals.server.model.test.js",
+    "testCrud": "cd server && jest tools.restart.test.js",
     "testMocha": "mocha server/tests",
     "install-all": "concurrently \"npm install\" \"cd client && npm install\"",
     "client": "cd client && npm start",
@@ -30,7 +31,6 @@
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
     "nodemon": "^1.18.10",
-    "react-scripts": "^1.1.5",
     "should": "^13.2.3",
     "supertest": "^4.0.2",
     "yarn": "^1.22.0"
@@ -38,7 +38,7 @@
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.1.3",
     "concurrently": "^4.1.2",
-    "jest": "^25.1.0",
+    "jest": "^24.9.0",
     "jest-esm-transformer": "^1.0.0"
   },
   "homepage": "https://github.com/UFWebApps/React_Template_Repo#readme"

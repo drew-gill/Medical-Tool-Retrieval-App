@@ -5,9 +5,9 @@
  */
 const fs = require('fs');
 const mongoose = require('mongoose');
-const Tool = require('./models/ToolModel.js');
-const config = require('./config/config.js');
-const testFolder = './tests/TestImages/';
+const Tool = require('../models/ToolModel.js');
+const config = require('../config/config.js');
+const testFolder = './UploadImages/';
 
 
 function getAllFiles(){

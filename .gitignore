@@ -20,7 +20,7 @@ client/build
 .env.test.local
 .env.production.local
 /server/config/config.js
-/server/tests/TestImages/
+/server/tests/UploadImages/
 
 
 npm-debug.log*

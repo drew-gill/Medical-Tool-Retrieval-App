@@ -1,5 +1,4 @@
 const Tool = require('../models/ToolModel.js');
-const Retrieval = require('../models/RetrievalModel.js');
 const fs = require("fs");
 exports.create = async (req, res) => {
     

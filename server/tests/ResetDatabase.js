@@ -7,22 +7,41 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const Tool = require('../models/ToolModel.js');
 const config = require('../config/config.js');
-const testFolder = './UploadImages/';
+const testFolder = './tests/UploadImages/';
 
 
 function getAllFiles(){
     fs.readdir(testFolder, (err, files) => {
-        files.forEach(imgPath => {
-            let splitPath = imgPath.split('.');
-            console.log(testFolder + imgPath);
-            let tool = new Tool({
-                "image":fs.readFileSync(testFolder + imgPath),
-                "keywords": [splitPath[0], splitPath[1]]
-            });
+        if(err) throw err;
 
-            console.log((tool.image).toString('base64'));
-            tool.save();
-        });
+        if(files){
+            files.forEach(imgPath => {
+                let splitPath = imgPath.split('.');
+
+
+                let tool = new Tool({
+                    "image":fs.readFileSync(testFolder + imgPath),
+                    "keywords": splitPath,
+                    "retrievalHistory": {
+                        "retrievalTime": Math.ceil(Math.random() * 200),
+                        "retrievalDate": new Date(Date.now()),
+                        "user": "Drew"
+                     }
+                });
+                
+                tool.retrievalHistory.push({
+                     retrievalTime: Math.ceil(Math.random() * 200),
+                     retrievalDate: new Date(Date.now()),
+                     user: "Gill"
+                  })
+
+                tool.save(function(err){
+                    if(err) return err;
+                });
+            });
+        } else{
+            console.log("No files found in testFolder directory.")
+        }
     });
 }
 
@@ -30,17 +49,12 @@ function getAllFiles(){
 const clearAndRefill = async () => {
     await mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
-    let promise = new Promise((resolve, reject) =>{
-
-    })
-
     //Clears the connected database collection of tools
     Tool.deleteMany({}, (err) => {
         if (err) throw err;
-        console.log('test1');
-        getAllFiles();
+        
 
-    });
+    }).then(getAllFiles);
 
     
 };

@@ -1,4 +1,4 @@
-const clearAndRefill = require('../ResetDatabase.js');
+const clearAndRefill = require('./ResetDatabase.js');
 
 describe('Refilling database', () => {
     test('deleting all documents and resetting', async (done) => {

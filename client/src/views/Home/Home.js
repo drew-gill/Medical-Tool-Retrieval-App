@@ -1,117 +1,82 @@
-import React, { useState } from 'react';
-import logo from '../../assets/logo.svg';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 // Material UI
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import SearchRounded from '@material-ui/icons/SearchRounded';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+// Custom components
 import ToolDetailPopup from '../../components/ToolDetailPopup';
+import FilterAndViewComponent from '../../components/FilterAndViewComponent';
+import AddToolComponent from '../../components/AddToolComponent';
+import { readAllTools, deleteTool, createTool } from '../../apiCalls';
 
 // Styled components
 const RootContainer = styled.div`
   margin: 40px;
 `;
 
-const SearchBarForm = styled.form`
-  margin: 10px 0px;
+const LoadingContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
-const ToolImage = styled.img`
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-  border-radius: 10px;
-  &:hover {
-    cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-`;
-
-const dummyData = [
-  {
-    src: logo,
-    keywords: [
-      'one',
-      '1',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      'sdafgsadf',
-      'asdfasf',
-      'asdfasdfsdaf',
-      'asdfasf'
-    ]
-  },
-  {
-    src: logo,
-    keywords: ['two', '2']
-  },
-  {
-    src: logo,
-    keywords: ['three', '3']
-  }
-];
-
-function Home() {
-  const [filteredTools, setFilteredTools] = useState(dummyData);
+const Home = () => {
+  const [data, setData] = useState(null);
   const [selectedTool, setSelectedTool] = useState(null);
 
-  const filterTools = e => {
-    const searchTerm = e.target.value;
+  useEffect(() => {
+    const fetch = async () => {
+      const res = await readAllTools();
+      setData(res);
+    };
+    fetch();
+  }, []);
+
+  const addTool = async (image, keywords) => {
+    const newTool = await createTool(image, keywords);
+    setData([...data, newTool]);
+  };
+
+  const removeTool = async id => {
+    await deleteTool(id);
     const newData = [];
-    dummyData.forEach(d => {
-      for (let i = 0; i < d.keywords.length; i++) {
-        const word = d.keywords[i];
-        if (word.search(searchTerm) !== -1) {
-          newData.push(d);
-          break;
-        }
+    data.forEach(d => {
+      if (d._id !== id) {
+        newData.push(d);
       }
     });
-    setFilteredTools(newData);
+    setData(newData);
   };
+
+  const selectTool = item => {
+    setSelectedTool(item);
+  };
+
+  if (data === null) {
+    return (
+      <LoadingContainer>
+        <CircularProgress />
+      </LoadingContainer>
+    );
+  }
 
   return (
     <RootContainer>
-      <SearchBarForm noValidate>
-        <TextField
-          onChange={filterTools}
-          label='Search'
-          placeholder='Type to search...'
-          type='search'
-          autoCorrect='off'
-          autoCapitalize='off'
-          autoComplete='off'
-          spellCheck='false'
-          fullWidth
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position='start'>
-                <SearchRounded />
-              </InputAdornment>
-            )
-          }}
-        />
-      </SearchBarForm>
-      <Grid container>
-        {filteredTools.map((d, index) => (
-          <Grid item xs={4} key={index}>
-            <ToolImage onClick={() => setSelectedTool(d)} src={d.src} />
-          </Grid>
-        ))}
-      </Grid>
+      <FilterAndViewComponent data={data} selectFunction={selectTool} />
+
+      <AddToolComponent createFunction={addTool} />
+
       <ToolDetailPopup
         tool={selectedTool}
         isOpen={selectedTool !== null}
         close={() => setSelectedTool(null)}
+        deleteFunction={removeTool}
       />
     </RootContainer>
   );
-}
+};
 
 export default Home;

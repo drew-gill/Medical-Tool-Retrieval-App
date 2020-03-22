@@ -4,7 +4,7 @@ import Home from './views/Home/Home';
 import NotFound from './views/NotFound';
 import NavBar from './components/Header/NavBar';
 
-const App = () => {
+const App = (props) => {
   return (
     <div>
       {/* <NavBar /> */}

@@ -8,7 +8,6 @@ const mongoose = require('mongoose');
  const retrievalSchema = new mongoose.Schema({
    retrievalTime: {type: mongoose.Number, required: true},
    retrievalDate: {type: Date, required: true, default: Date.now},
-   user: {type: String}
    });
   
 

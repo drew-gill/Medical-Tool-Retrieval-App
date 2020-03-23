@@ -11,14 +11,12 @@ let toolInput = {
 }, id, db, expectedImage = Buffer.from(toolInput.image);
 
 let retrievalData0 = {
-        "retrievalTime": Math.ceil(Math.random() * 100),
-        "retrievalDate": new Date(Date.now()),
-        "user": "Drew"
+        retrievalTime: Math.ceil(Math.random() * 100),
+        retrievalDate: new Date(Date.now()),
      },
     retrievalData1 = {
-        "retrievalTime": Math.ceil(Math.random() * 100),
-        "retrievalDate": new Date(Date.now()),
-        "user": "Gill"
+        retrievalTime: Math.ceil(Math.random() * 100),
+        retrievalDate: new Date(Date.now()),
     };
 
 
@@ -75,11 +73,54 @@ describe('Tool Schema Unit Tests', () => {
             })
         });
 
+        test('throws an error when retrieval item not properly formatted', async(done) =>{
+            await new Tool({
+                image: toolInput.image,
+                keywords: toolInput.keywords,
+                retrievalHistory: ["Retrieval"]
+            }).save((err) => {
+                expect(err).not.toBeNull();
+                done();
+            })
+        });
+
+        test('throws an error when retrieval item date is incomplete', async(done) => {
+            let tempRetrieval = {
+                retrievalTime: Math.ceil(Math.random() * 100),
+                retrievalDate: null
+            }
+
+            await new Tool({
+                image: toolInput.image,
+                keywords: toolInput.keywords,
+                retrievalHistory: [tempRetrieval]
+            }).save((err) => {
+                expect(err).not.toBeNull();
+                done();
+            })
+        });
+
+        test('throws an error when retrieval item time is incomplete', async(done) => {
+            let tempRetrieval = {
+                retrievalTime: null,
+                retrievalDate: new Date(Date.now())
+            }
+
+            await new Tool({
+                image: toolInput.image,
+                keywords: toolInput.keywords,
+                retrievalHistory: [tempRetrieval]
+            }).save((err) => {
+                expect(err).not.toBeNull();
+                done();
+            })
+        });
+
         test('saves properly when binary data, keywords, and retrievalHistory provided', async (done) => {
             let tool = new Tool({
-                "image": toolInput.image,
-                "keywords": toolInput.keywords,
-                "retrievalHistory": [retrievalData0]
+                image: toolInput.image,
+                keywords: toolInput.keywords,
+                retrievalHistory: [retrievalData0]
             });
             await tool.save((err, toolSave) => {
                 expect(err).toBeNull();
@@ -98,9 +139,9 @@ describe('Tool Schema Unit Tests', () => {
 
         test('saves properly when binary data, keywords, and retrievalHistory provided AND a retrievalHistory entry pushed', async (done) => {
             let tool = new Tool({
-                "image": toolInput.image,
-                "keywords": toolInput.keywords,
-                "retrievalHistory": [retrievalData0]
+                image: toolInput.image,
+                keywords: toolInput.keywords,
+                retrievalHistory: [retrievalData0]
             });
 
             tool.retrievalHistory.push(retrievalData1);

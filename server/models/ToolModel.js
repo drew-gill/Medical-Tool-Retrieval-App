@@ -1,9 +1,10 @@
 /* Import mongoose and define any variables needed to create the schema */
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const RetrievalSchema = require('./RetrievalSchema.js');
 
 
-const toolSchema = new mongoose.Schema({
+const toolSchema = new Schema({
    image: {type: Buffer, required: true},
    keywords: {type: [String], required: true, default:undefined},
    retrievalHistory: [RetrievalSchema]

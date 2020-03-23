@@ -25,14 +25,12 @@ function getAllFiles(){
                     "retrievalHistory": {
                         "retrievalTime": Math.ceil(Math.random() * 200),
                         "retrievalDate": new Date(Date.now()),
-                        "user": "Drew"
                      }
                 });
                 
                 tool.retrievalHistory.push({
                      retrievalTime: Math.ceil(Math.random() * 200),
                      retrievalDate: new Date(Date.now()),
-                     user: "Gill"
                   })
 
                 tool.save(function(err){

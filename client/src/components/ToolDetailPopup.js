@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 // Material UI
@@ -9,6 +9,9 @@ import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
 import CloseRounded from '@material-ui/icons/CloseRounded';
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Styles
 const useStyles = makeStyles(theme => ({
@@ -29,17 +32,26 @@ const useStyles = makeStyles(theme => ({
 const RootContainer = styled(Paper)`
   width: 80vw;
   height: 80vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: relative;
+  margin: 40px;
+`;
+
+const Container = styled.div`
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  margin: 40px 0px;
 `;
 
 const ToolImage = styled.img`
-  width: 100%;
-  max-width: 80vh;
+  width: 80%;
+  height: 70vh;
+  object-fit: cover;
   display: relative;
+  padding-bottom: 10px;
 `;
 
 const KeywordContainer = styled.div`
@@ -51,15 +63,25 @@ const KeywordContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-const ToolDetailPopup = ({ tool, isOpen, close }) => {
+const ToolDetailPopup = ({ tool, isOpen, close, deleteFunction }) => {
   const classes = useStyles();
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Helper function to delete the tool and then close the popup
+  const deleteTool = async () => {
+    setIsDeleting(true);
+    await deleteFunction(tool._id);
+    setIsDeleting(false);
+    close();
+  };
 
   // Prevent false render
   if (tool === null) {
     return <React.Fragment></React.Fragment>;
   }
 
-  const { src, keywords } = tool;
+  const { image, keywords } = tool;
+  const src = `data:image/jpg;base64, ${image.toString('base64')}`;
 
   return (
     <Backdrop open={isOpen} className={classes.backdrop}>
@@ -67,18 +89,32 @@ const ToolDetailPopup = ({ tool, isOpen, close }) => {
         <IconButton className={classes.closeButton} onClick={close}>
           <CloseRounded />
         </IconButton>
-        <ToolImage src={src} />
-        <Typography variant='h6'>Keywords</Typography>
-        <KeywordContainer>
-          {keywords.map((word, index) => (
-            <Chip
-              key={index}
-              label={word}
-              className={classes.chip}
+        <Container>
+          <ToolImage src={src} />
+          <Typography variant='h6'>Keywords</Typography>
+          <KeywordContainer>
+            {keywords.map((word, index) => (
+              <Chip
+                key={index}
+                label={word}
+                className={classes.chip}
+                color='secondary'
+              />
+            ))}
+          </KeywordContainer>
+          {isDeleting ? (
+            <CircularProgress />
+          ) : (
+            <Button
+              variant='text'
               color='secondary'
-            />
-          ))}
-        </KeywordContainer>
+              startIcon={<DeleteIcon />}
+              onClick={deleteTool}
+            >
+              Delete
+            </Button>
+          )}
+        </Container>
       </RootContainer>
     </Backdrop>
   );

@@ -75,6 +75,7 @@ const Login = () => {
                 Sign In
               </Button>
               <br></br>
+              <ButtonContainer>or</ButtonContainer>
               <br></br>
               <Button onClick={handleRedirect} variant="contained" color='primary'>
                 Continue

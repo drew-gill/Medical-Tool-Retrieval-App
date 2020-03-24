@@ -2,20 +2,19 @@ const mongoose = require('mongoose');
 const User = require('../models/UserModel.js');
 const config = require('../config/config.js');
 
-
+//Note: although there are testUser instances below, the username field must be unique for each test so hard-coded entries
+// are used to prevent errors from asynchronous running.
+//the main testuser instance
 let testUser0 = new User({
     username: "testadmin123",
     password: "password1"
 });
 
+
+//used for duplicate username testing
 let testUser1 = new User({
     username: "testadmin123",
     password: "32Sdfyadfcvbjcand"
-});
-
-let testUser2 = new User({
-    username: "testUser",
-    password: "This is my password."
 });
 
 let id, db;

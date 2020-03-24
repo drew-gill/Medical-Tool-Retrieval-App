@@ -90,24 +90,27 @@ describe('User Schema Unit Tests', () => {
                 if(err) return err;
                 expect(err).toBeNull();
                 id = userSave._id;
+
+                //create another user with the same username, after the first user saves.
+                new User({
+                    username: testUser1.username,
+                    password: testUser1.password
+                }).save((err) => {
+                    expect(err).not.toBeNull();
+                    done();
+                });
             });
 
-            await new User({
-                username: testUser1.username,
-                password: testUser1.password
-            }).save((err) => {
-                expect(err).not.toBeNull();
-                done();
-            });
+            
         });
 
 
 
         afterAll(async () => {
             //delete any users that have a username containing "test"
-            await User.deleteMany({ username: /test/}, function (err) {
-                if(err) throw err;
-            });
+            // await User.deleteMany({ username: /test/}, function (err) {
+            //     if(err) throw err;
+            // });
 
             await mongoose.connection.close();
         });

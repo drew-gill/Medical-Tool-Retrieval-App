@@ -17,6 +17,11 @@ const LoginContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
+const ButtonContainer = styled.div`
+  padding-top: 10px;
+  text-align: center
+`;
+
 const useStyles = makeStyles(theme => ({
     root: {
       '& > *': {
@@ -25,17 +30,17 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Login = (props) => {
+const Login = () => {
     const classes = useStyles();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    function validateForm() {
+    const validateForm = () => {
         return username.length > 0 && password.length > 0;
     }
 
-    function handleSubmit(event) {
+    const handleSubmit = (event) => {
         event.preventDefault();
     }
 
@@ -46,6 +51,7 @@ const Login = (props) => {
 
     return (
       <LoginContainer>
+          <ButtonContainer>LOGIN</ButtonContainer>   
           <form onSubmit={handleSubmit}>
             <form className={classes.root} noValidate autoComplete="off">
               <FormLabel>Username</FormLabel>
@@ -64,13 +70,16 @@ const Login = (props) => {
                   onChange={e => setPassword(e.target.value)}
                 />
             </form>
-            <Button disabled={!validateForm()} color='primary'>
-              Sign In
-            </Button>
-            <br></br>
-            <Button onClick={handleRedirect} color='primary'>
-              Continue
-            </Button>
+            <ButtonContainer>
+              <Button disabled={!validateForm()} variant="contained" color='primary'>
+                Sign In
+              </Button>
+              <br></br>
+              <br></br>
+              <Button onClick={handleRedirect} variant="contained" color='primary'>
+                Continue
+              </Button>
+            </ButtonContainer>
           </form>
       </LoginContainer>
     );

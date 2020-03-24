@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const bcrypt = require(bcrypt);
+const bcrypt = require('bcrypt');
 const SALT_WORK_FACTOR = 10;
+
+//authentication code derived from https://www.mongodb.com/blog/post/password-authentication-with-mongoose-part-1
 
 const UserSchema = new Schema({
     username: { type: String, required: true, index: { unique: true } },

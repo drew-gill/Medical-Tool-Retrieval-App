@@ -10,6 +10,16 @@ let toolInput = {
     keywords: ['test1', 'test2', 'test3']
 }, id, db, expectedImage = Buffer.from(toolInput.image);
 
+let retrievalData0 = {
+        retrievalTime: Math.ceil(Math.random() * 100),
+        retrievalDate: new Date(Date.now()),
+     },
+    retrievalData1 = {
+        retrievalTime: Math.ceil(Math.random() * 100),
+        retrievalDate: new Date(Date.now()),
+    };
+
+
 describe('Tool Schema Unit Tests', () => {
     describe('Saving to database', () => {
 
@@ -17,7 +27,6 @@ describe('Tool Schema Unit Tests', () => {
             db = await mongoose.connect(config.db.uri, {useNewUrlParser: true, useUnifiedTopology: true});
             await mongoose.set('useCreateIndex', true);
             await mongoose.set('useFindAndModify', false);
-            console.log(`established connection to db at uri: ${config.db.uri}!`);
         });
 
         afterEach(async () => {
@@ -63,6 +72,98 @@ describe('Tool Schema Unit Tests', () => {
                 done();
             })
         });
+
+        test('throws an error when retrieval item not properly formatted', async(done) =>{
+            await new Tool({
+                image: toolInput.image,
+                keywords: toolInput.keywords,
+                retrievalHistory: ["Retrieval"]
+            }).save((err) => {
+                expect(err).not.toBeNull();
+                done();
+            })
+        });
+
+        test('throws an error when retrieval item date is incomplete', async(done) => {
+            let tempRetrieval = {
+                retrievalTime: Math.ceil(Math.random() * 100),
+                retrievalDate: null
+            }
+
+            await new Tool({
+                image: toolInput.image,
+                keywords: toolInput.keywords,
+                retrievalHistory: [tempRetrieval]
+            }).save((err) => {
+                expect(err).not.toBeNull();
+                done();
+            })
+        });
+
+        test('throws an error when retrieval item time is incomplete', async(done) => {
+            let tempRetrieval = {
+                retrievalTime: null,
+                retrievalDate: new Date(Date.now())
+            }
+
+            await new Tool({
+                image: toolInput.image,
+                keywords: toolInput.keywords,
+                retrievalHistory: [tempRetrieval]
+            }).save((err) => {
+                expect(err).not.toBeNull();
+                done();
+            })
+        });
+
+        test('saves properly when binary data, keywords, and retrievalHistory provided', async (done) => {
+            let tool = new Tool({
+                image: toolInput.image,
+                keywords: toolInput.keywords,
+                retrievalHistory: [retrievalData0]
+            });
+            await tool.save((err, toolSave) => {
+                expect(err).toBeNull();
+                id = toolSave._id;
+                expect(id).not.toBeNull();
+                expect(Buffer.compare(toolSave.image, expectedImage)).toBe(0);
+                expect(Array.from(toolSave.keywords)).toMatchObject(toolInput.keywords);
+
+                expect(toolSave.retrievalHistory[0].retrievalTime).toBe(retrievalData0.retrievalTime);
+                expect(toolSave.retrievalHistory[0].retrievalDate).toBe(retrievalData0.retrievalDate);
+                expect(toolSave.retrievalHistory[0].user).toBe(retrievalData0.user);
+
+                done();
+            });
+        }, 10000);
+
+        test('saves properly when binary data, keywords, and retrievalHistory provided AND a retrievalHistory entry pushed', async (done) => {
+            let tool = new Tool({
+                image: toolInput.image,
+                keywords: toolInput.keywords,
+                retrievalHistory: [retrievalData0]
+            });
+
+            tool.retrievalHistory.push(retrievalData1);
+
+            await tool.save((err, toolSave) => {
+                expect(err).toBeNull();
+                id = toolSave._id;
+                expect(id).not.toBeNull();
+                expect(Buffer.compare(toolSave.image, expectedImage)).toBe(0);
+                expect(Array.from(toolSave.keywords)).toMatchObject(toolInput.keywords);
+
+                expect(toolSave.retrievalHistory[0].retrievalTime).toBe(retrievalData0.retrievalTime);
+                expect(toolSave.retrievalHistory[0].retrievalDate).toBe(retrievalData0.retrievalDate);
+                expect(toolSave.retrievalHistory[0].user).toBe(retrievalData0.user);
+
+                expect(toolSave.retrievalHistory[1].retrievalTime).toBe(retrievalData1.retrievalTime);
+                expect(toolSave.retrievalHistory[1].retrievalDate).toBe(retrievalData1.retrievalDate);
+                expect(toolSave.retrievalHistory[1].user).toBe(retrievalData1.user);
+
+                done();
+            });
+        }, 10000);
 
     });
 });

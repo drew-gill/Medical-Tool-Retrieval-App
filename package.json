@@ -4,8 +4,9 @@
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "index.js",
   "scripts": {
-    "test": "cd server && jest tools.server.model.test.js && jest retrievals.server.model.test.js",
+    "test": "cd server && jest tools.server.model.test.js && npm run testAuth",
     "testCrud": "cd server && jest tools.restart.test.js",
+    "testAuth": "jest users.server.model.test.js",
     "testMocha": "mocha server/tests",
     "install-all": "concurrently \"npm install\" \"cd client && npm install\"",
     "client": "cd client && npm start",
@@ -24,6 +25,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.2",
+    "bcrypt": "^4.0.1",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "mocha": "^6.2.1",

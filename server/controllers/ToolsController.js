@@ -1,6 +1,5 @@
 const Tool = require('../models/ToolModel.js');
-const Retrieval = require('../models/RetrievalModel.js');
-const fs = require('fs');
+const fs = require("fs");
 exports.create = async (req, res) => {
   if (!req.file) {
     return res.status(200).send({

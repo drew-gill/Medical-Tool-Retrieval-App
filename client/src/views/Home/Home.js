@@ -8,6 +8,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import ToolDetailPopup from '../../components/ToolDetailPopup';
 import FilterAndViewComponent from '../../components/FilterAndViewComponent';
 import AddToolComponent from '../../components/AddToolComponent';
+import RecordComponent from '../../components/RecordComponent';
 import { readAllTools, deleteTool, createTool } from '../../apiCalls';
 
 // Styled components
@@ -66,7 +67,7 @@ const Home = () => {
   return (
     <RootContainer>
       <FilterAndViewComponent data={data} selectFunction={selectTool} />
-
+      <RecordComponent/>
       <AddToolComponent createFunction={addTool} />
 
       <ToolDetailPopup

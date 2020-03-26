@@ -24,7 +24,7 @@ const LoadingContainer = styled.div`
 `;
 
 const Home = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [selectedTool, setSelectedTool] = useState(null);
 
   useEffect(() => {
@@ -55,13 +55,13 @@ const Home = () => {
     setSelectedTool(item);
   };
 
-  if (data === null) {
-    return (
-      <LoadingContainer>
-        <CircularProgress />
-      </LoadingContainer>
-    );
-  }
+  // if (data === null) {
+  //   return (
+  //     <LoadingContainer>
+  //       <CircularProgress />
+  //     </LoadingContainer>
+  //   );
+  // }
 
   return (
     <RootContainer>

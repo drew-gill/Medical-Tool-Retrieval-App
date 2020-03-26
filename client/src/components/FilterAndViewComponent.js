@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchRounded from '@material-ui/icons/SearchRounded';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 // Styled components
 const SearchBarForm = styled.form`
@@ -25,6 +26,13 @@ const ToolImage = styled.img`
   padding: 10px;
   box-sizing: border-box;
   object-fit: cover;
+`;
+
+const SkeletonContainer = styled.div`
+  width: 100%;
+  height: 300px;
+  padding: 10px;
+  box-sizing: border-box;
 `;
 
 const FilterAndViewComponent = ({ data, selectFunction }) => {
@@ -53,6 +61,14 @@ const FilterAndViewComponent = ({ data, selectFunction }) => {
 
   const handleSelect = item => selectFunction(item);
 
+  const generateSkeletons = () => {
+    const skeletons = [];
+    for (let i = 0; i < 20; i++) {
+      skeletons.push(<Skeleton variant='rect' width='100%' height='100%' />);
+    }
+    return skeletons;
+  };
+
   return (
     <React.Fragment>
       <SearchBarForm noValidate>
@@ -79,20 +95,27 @@ const FilterAndViewComponent = ({ data, selectFunction }) => {
       </SearchBarForm>
 
       <Grid container alignContent='stretch'>
-        {filteredData.map((d, index) => (
-          <GridItem
-            item
-            xs={12}
-            sm={6}
-            md={4}
-            key={d._id}
-            onClick={() => handleSelect(d)}
-          >
-            <ToolImage
-              src={`data:image/jpg;base64, ${d.image.toString('base64')}`}
-            />
-          </GridItem>
-        ))}
+        {filteredData.length > 0
+          ? filteredData.map((d, index) => (
+              <GridItem
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                key={d._id}
+                onClick={() => handleSelect(d)}
+              >
+                <ToolImage
+                  src={`data:image/jpg;base64, ${d.image.toString('base64')}`}
+                />
+              </GridItem>
+            ))
+          : generateSkeletons().map((skel, index) => (
+              <GridItem item xs={12} sm={6} md={4} lg={3} key={index}>
+                <SkeletonContainer>{skel}</SkeletonContainer>
+              </GridItem>
+            ))}
       </Grid>
     </React.Fragment>
   );

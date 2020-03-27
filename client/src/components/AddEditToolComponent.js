@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 // Material UI
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
+import AddRoundedIcon from '@material-ui/icons/AddRounded';
+import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -63,13 +64,6 @@ const KeywordContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-const LoadingContainer = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 // Styles
 const useStyles = makeStyles(theme => ({
   button: {
@@ -85,7 +79,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const AddToolComponent = ({ createFunction }) => {
+const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
   const classes = useStyles();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
@@ -95,19 +89,33 @@ const AddToolComponent = ({ createFunction }) => {
   const [keywords, setKeywords] = useState(['demo']);
   const [error, setError] = useState(false);
 
+  const variant = tool !== null && tool !== undefined ? 'edit' : 'add';
+  const title = variant === 'edit' ? 'Edit Tool' : 'New Tool';
+  const buttonTitle = variant === 'edit' ? 'Save' : 'Add';
+  const fabIcon = variant === 'edit' ? <EditRoundedIcon /> : <AddRoundedIcon />;
+
+  useEffect(() => {
+    if (variant === 'edit') {
+      setKeywords(tool.keywords);
+      setImg(`data:image/jpg;base64, ${tool.image.toString('base64')}`);
+    }
+  }, [tool]);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handleCreate = async () => {
-    if (imgData !== null && keywords.length > 0) {
+  const handleAction = async () => {
+    if (img !== null && keywords.length > 0) {
       setIsSubmitting(true);
-      await createFunction(imgData, keywords);
+      await actionButtonFunction(imgData, keywords);
       setIsSubmitting(false);
       // Reset data
       setError(false);
-      setKeywords([]);
       setKeyInputValue('');
-      setImg(null);
       setImgData(null);
+      if (variant !== 'edit') {
+        setKeywords([]);
+        setImg(null);
+      }
       // Close the modal
       handleClose();
     } else {
@@ -133,14 +141,14 @@ const AddToolComponent = ({ createFunction }) => {
     <React.Fragment>
       {/* Button */}
       <Fab className={classes.button} color='primary' onClick={handleOpen}>
-        <AddIcon />
+        {fabIcon}
       </Fab>
       {/* Popup */}
-      <Dialog open={open} onClose={handleClose} maxWidth='sm' fullWidth>
-        <DialogTitle>Add New Tool</DialogTitle>
+      <Dialog open={open} maxWidth='sm' fullWidth>
+        <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Upload an image for the tool and add keywords associated with the
+            Upload an image for the tool and add keywords to associate with the
             tool.
           </DialogContentText>
           <SectionContainer error={error && img === null}>
@@ -212,7 +220,7 @@ const AddToolComponent = ({ createFunction }) => {
                   key={index}
                   label={word}
                   className={classes.chip}
-                  color='secondary'
+                  color='primary'
                   onDelete={() => handleDeleteKeyword(word)}
                 />
               ))}
@@ -227,8 +235,8 @@ const AddToolComponent = ({ createFunction }) => {
               <Button onClick={handleClose} color='primary'>
                 Cancel
               </Button>
-              <Button onClick={handleCreate} color='primary'>
-                Add
+              <Button onClick={handleAction} color='primary'>
+                {buttonTitle}
               </Button>
             </React.Fragment>
           )}
@@ -238,4 +246,4 @@ const AddToolComponent = ({ createFunction }) => {
   );
 };
 
-export default AddToolComponent;
+export default AddEditToolComponent;

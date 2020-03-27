@@ -4,15 +4,14 @@ import styled from 'styled-components';
 
 // Custom components
 import { withToolData } from '../../components/ToolDataContext';
+import AddEditToolComponent from '../../components/AddEditToolComponent';
 
 // Material UI
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
-import Fab from '@material-ui/core/Fab';
 import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
-import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
@@ -80,6 +79,11 @@ const ToolView = ({ toolData }) => {
     goBack();
   };
 
+  const updateTool = async (image, keywords) => {
+    const res = await toolData.updateTool(image, keywords, id);
+    setTool(res);
+  };
+
   const renderImage = () => {
     if (tool === null) {
       return (
@@ -102,12 +106,7 @@ const ToolView = ({ toolData }) => {
       comp = <Skeleton variant='rect' width='100%' height={100} />;
     } else {
       comp = tool.keywords.map((word, index) => (
-        <Chip
-          key={index}
-          label={word}
-          style={{ margin: 5 }}
-          color='secondary'
-        />
+        <Chip key={index} label={word} style={{ margin: 5 }} color='primary' />
       ));
     }
     return <KeywordContainer>{comp}</KeywordContainer>;
@@ -137,9 +136,8 @@ const ToolView = ({ toolData }) => {
           <ArrowBackRoundedIcon />
         </IconButton>
       </BackButtonContainer>
-      <Fab color='primary' style={{ position: 'fixed', right: 20, bottom: 20 }}>
-        <EditRoundedIcon />
-      </Fab>
+
+      <AddEditToolComponent tool={tool} actionButtonFunction={updateTool} />
 
       <Container maxWidth='md'>
         <ToolViewContainer>

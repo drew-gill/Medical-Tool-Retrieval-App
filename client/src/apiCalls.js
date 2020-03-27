@@ -31,9 +31,21 @@ const createTool = async (image, keywords) => {
   return tool;
 };
 
+const updateTool = async (image, keywords, id) => {
+  let formData = new FormData();
+  if (image) {
+    formData.append('image', image);
+  }
+  formData.append('keywords', JSON.stringify(keywords));
+  const res = await axios.put(`${getUrl()}?id=${id}`, formData);
+  const { data } = res;
+  const tool = await readTool(data._id);
+  return tool;
+};
+
 const readTool = async id => {
   const res = await axios.get(`${getUrl()}?id=${id}`);
   return res.data;
 };
 
-export { readAllTools, deleteTool, createTool, readTool };
+export { readAllTools, deleteTool, createTool, readTool, updateTool };

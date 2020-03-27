@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { withToolData } from '../../components/ToolDataContext';
 import ToolDetailPopup from '../../components/ToolDetailPopup';
 import FilterAndViewComponent from '../../components/FilterAndViewComponent';
-import AddToolComponent from '../../components/AddToolComponent';
+import AddEditToolComponent from '../../components/AddEditToolComponent';
 
 // Styled components
 const RootContainer = styled.div`
@@ -48,7 +48,7 @@ const Home = ({ toolData }) => {
       <Typography variant='h3'>Tool Finder</Typography>
       <FilterAndViewComponent data={data} selectFunction={selectTool} />
 
-      <AddToolComponent createFunction={addTool} />
+      <AddEditToolComponent actionButtonFunction={addTool} />
 
       <ToolDetailPopup
         tool={selectedTool}

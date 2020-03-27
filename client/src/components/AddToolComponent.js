@@ -102,6 +102,13 @@ const AddToolComponent = ({ createFunction }) => {
       setIsSubmitting(true);
       await createFunction(imgData, keywords);
       setIsSubmitting(false);
+      // Reset data
+      setError(false);
+      setKeywords([]);
+      setKeyInputValue('');
+      setImg(null);
+      setImgData(null);
+      // Close the modal
       handleClose();
     } else {
       setError(true);
@@ -129,7 +136,7 @@ const AddToolComponent = ({ createFunction }) => {
         <AddIcon />
       </Fab>
       {/* Popup */}
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} maxWidth='sm' fullWidth>
         <DialogTitle>Add New Tool</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -211,23 +218,21 @@ const AddToolComponent = ({ createFunction }) => {
               ))}
             </KeywordContainer>
           </SectionContainer>
-
-          {isSubmitting && (
-            <LoadingContainer>
-              <CircularProgress />
-            </LoadingContainer>
-          )}
         </DialogContent>
-        {!isSubmitting && (
-          <DialogActions>
-            <Button onClick={handleClose} color='primary'>
-              Cancel
-            </Button>
-            <Button onClick={handleCreate} color='primary'>
-              Add
-            </Button>
-          </DialogActions>
-        )}
+        <DialogActions>
+          {isSubmitting ? (
+            <CircularProgress />
+          ) : (
+            <React.Fragment>
+              <Button onClick={handleClose} color='primary'>
+                Cancel
+              </Button>
+              <Button onClick={handleCreate} color='primary'>
+                Add
+              </Button>
+            </React.Fragment>
+          )}
+        </DialogActions>
       </Dialog>
     </React.Fragment>
   );

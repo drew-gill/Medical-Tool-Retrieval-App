@@ -1,70 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 // Material UI
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
 
 // Custom components
+import { withToolData } from '../../components/ToolDataContext';
 import ToolDetailPopup from '../../components/ToolDetailPopup';
 import FilterAndViewComponent from '../../components/FilterAndViewComponent';
 import AddToolComponent from '../../components/AddToolComponent';
-import { readAllTools, deleteTool, createTool } from '../../apiCalls';
 
 // Styled components
 const RootContainer = styled.div`
   margin: 40px;
 `;
 
-const LoadingContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Home = () => {
-  const [data, setData] = useState([]);
+const Home = ({ toolData }) => {
+  const [data, setData] = useState(toolData.data);
   const [selectedTool, setSelectedTool] = useState(null);
 
   useEffect(() => {
     const fetch = async () => {
-      const res = await readAllTools();
-      setData(res);
+      await toolData.fetchAllTools();
+      setData(toolData.data);
     };
-    fetch();
+    if (data.length === 0) {
+      fetch();
+    }
   }, []);
 
   const addTool = async (image, keywords) => {
-    const newTool = await createTool(image, keywords);
-    setData([...data, newTool]);
+    await toolData.createTool(image, keywords);
+    setData(toolData.data);
   };
 
   const removeTool = async id => {
-    await deleteTool(id);
-    const newData = [];
-    data.forEach(d => {
-      if (d._id !== id) {
-        newData.push(d);
-      }
-    });
-    setData(newData);
+    await toolData.deleteTool(id);
+    setData(toolData.data);
   };
 
   const selectTool = item => {
     setSelectedTool(item);
   };
 
-  // if (data === null) {
-  //   return (
-  //     <LoadingContainer>
-  //       <CircularProgress />
-  //     </LoadingContainer>
-  //   );
-  // }
-
   return (
     <RootContainer>
+      <Typography variant='h3'>Tool Finder</Typography>
+      <Link to='ToolView/1'>Test</Link>
       <FilterAndViewComponent data={data} selectFunction={selectTool} />
 
       <AddToolComponent createFunction={addTool} />
@@ -79,4 +62,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default withToolData(Home);

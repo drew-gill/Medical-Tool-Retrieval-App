@@ -6,7 +6,6 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchRounded from '@material-ui/icons/SearchRounded';
-import Paper from '@material-ui/core/Paper';
 import Skeleton from '@material-ui/lab/Skeleton';
 
 // Styled components
@@ -83,7 +82,6 @@ const FilterAndViewComponent = ({ data, selectFunction }) => {
         <TextField
           onChange={handleFilterChange}
           value={searchTerm}
-          label='Search'
           placeholder='Type to search...'
           type='search'
           autoCorrect='off'
@@ -103,7 +101,7 @@ const FilterAndViewComponent = ({ data, selectFunction }) => {
       </SearchBarForm>
 
       <Grid container alignContent='stretch' spacing={3}>
-        {filteredData.length > 0
+        {data.length > 0
           ? filteredData.map((d, index) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={d._id}>
                 <GridItemContainer onClick={() => handleSelect(d)}>

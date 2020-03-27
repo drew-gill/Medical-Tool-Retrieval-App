@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 // Material UI
@@ -45,6 +46,7 @@ const ToolImage = styled.img`
 const FilterAndViewComponent = ({ data, selectFunction }) => {
   const [filteredData, setFilteredData] = useState(data);
   const [searchTerm, setSearchTerm] = useState('');
+  const history = useHistory();
 
   useEffect(() => {
     filterData();
@@ -66,7 +68,7 @@ const FilterAndViewComponent = ({ data, selectFunction }) => {
 
   const handleFilterChange = e => setSearchTerm(e.target.value);
 
-  const handleSelect = item => selectFunction(item);
+  const handleSelect = item => history.push(`/ToolView/${item._id}`);
 
   const generateSkeletons = () => {
     const skeletons = [];

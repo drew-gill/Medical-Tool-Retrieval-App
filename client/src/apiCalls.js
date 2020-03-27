@@ -36,4 +36,4 @@ const readTool = async id => {
   return res.data;
 };
 
-export { readAllTools, deleteTool, createTool };
+export { readAllTools, deleteTool, createTool, readTool };

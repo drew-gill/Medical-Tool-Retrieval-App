@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 // Material UI
 import Typography from '@material-ui/core/Typography';
@@ -47,7 +46,6 @@ const Home = ({ toolData }) => {
   return (
     <RootContainer>
       <Typography variant='h3'>Tool Finder</Typography>
-      <Link to='ToolView/1'>Test</Link>
       <FilterAndViewComponent data={data} selectFunction={selectTool} />
 
       <AddToolComponent createFunction={addTool} />

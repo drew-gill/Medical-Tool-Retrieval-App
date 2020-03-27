@@ -1,5 +1,5 @@
 import React from 'react';
-import { readAllTools, deleteTool, createTool } from '../apiCalls';
+import { readAllTools, deleteTool, createTool, readTool } from '../apiCalls';
 
 const ToolDataContext = React.createContext(null);
 
@@ -11,6 +11,11 @@ class ToolData {
   fetchAllTools = async () => {
     const res = await readAllTools();
     this.data = res;
+  };
+
+  fetchTool = async id => {
+    const res = await readTool(id);
+    return res;
   };
 
   createTool = async (image, keywords) => {

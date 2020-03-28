@@ -78,6 +78,11 @@ let reasons = UserSchema.statics.failedLogin = {
     MAX_ATTEMPTS: 2
 };
 
+//this is the main method for authenticating a user in the database
+//to use, call the UserSchema (or whatever it is imported as) method with arguments of the candidate username/password
+//Ex: User.getAuthenticated("testUsername", "testPassword", function(err, user, reason)){}
+//If successful, reason == null in the callback, and user != null. The returned user is the correct user in the database.
+//If unsucessful, the reason will be listed as a number (enum above)
 UserSchema.statics.getAuthenticated = function(username, password, cb){
     this.findOne({ username: username}, function(err, user){
         if(err) return cb(err);

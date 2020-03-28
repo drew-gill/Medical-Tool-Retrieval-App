@@ -69,7 +69,7 @@ describe('User Authentication Unit Tests', () => {
             });
 
 
-            test('Login fails on wrong password, returns reason 0 (NOT_FOUND).', async(done) => {
+            test('Login fails on wrong password, returns reason 1 (WRONG_PASSWORD).', async(done) => {
 
                 let UnsuccessfulUser = new User({
                     username: testUser0.username,

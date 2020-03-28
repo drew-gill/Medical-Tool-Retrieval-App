@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
 
 // Material UI
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 // Custom components
 import { withToolData } from '../../components/ToolDataContext';
@@ -16,8 +18,20 @@ const RootContainer = styled.div`
   margin: 40px;
 `;
 
+const TopBar = styled.div`
+  display: flex;
+  width: 100%;
+`;
+
+const ActionContainer = styled.div`
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+`;
+
 const Home = ({ toolData }) => {
   const authContext = useContext(AuthContext);
+  const history = useHistory();
   const [data, setData] = useState(toolData.data);
   const [selectedTool, setSelectedTool] = useState(null);
 
@@ -46,9 +60,21 @@ const Home = ({ toolData }) => {
     setSelectedTool(item);
   };
 
+  const pushLogin = () => history.push('/Login');
+
   return (
     <RootContainer>
-      <Typography variant='h3'>Tool Finder</Typography>
+      <TopBar>
+        <Typography variant='h3'>Tool Finder</Typography>
+        <ActionContainer>
+          <Button
+            color={authContext.authenticated ? 'secondary' : 'primary'}
+            onClick={authContext.authenticated ? authContext.logout : pushLogin}
+          >
+            {authContext.authenticated ? 'Logout' : 'Login'}
+          </Button>
+        </ActionContainer>
+      </TopBar>
       <FilterAndViewComponent data={data} selectFunction={selectTool} />
 
       {authContext.authenticated && (

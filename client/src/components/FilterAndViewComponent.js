@@ -43,7 +43,7 @@ const ToolImage = styled.img`
   z-index: 3;
 `;
 
-const FilterAndViewComponent = ({ data, selectFunction }) => {
+const FilterAndViewComponent = ({ data }) => {
   const [filteredData, setFilteredData] = useState(data);
   const [searchTerm, setSearchTerm] = useState('');
   const history = useHistory();

@@ -33,7 +33,8 @@ class Auth {
 const AuthContext = createContext({
   authenticated: false,
   refreshAuth: () => {},
-  login: (username, password) => {}
+  login: (username, password) => {},
+  logout: () => {}
 });
 
 export default Auth;

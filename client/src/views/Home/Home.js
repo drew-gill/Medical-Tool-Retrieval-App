@@ -5,10 +5,12 @@ import { useHistory } from 'react-router-dom';
 // Material UI
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import ReplayRoundedIcon from '@material-ui/icons/ReplayRounded';
 
 // Custom components
 import { withToolData } from '../../components/ToolDataContext';
 import { AuthContext } from '../../Auth';
+import AccountMenu from '../../components/AccountMenu';
 import ToolDetailPopup from '../../components/ToolDetailPopup';
 import FilterAndViewComponent from '../../components/FilterAndViewComponent';
 import AddEditToolComponent from '../../components/AddEditToolComponent';
@@ -35,13 +37,14 @@ const Home = ({ toolData }) => {
   const [data, setData] = useState(toolData.data);
   const [selectedTool, setSelectedTool] = useState(null);
 
+  const fetchTools = async () => {
+    await toolData.fetchAllTools();
+    setData(toolData.data);
+  };
+
   useEffect(() => {
-    const fetch = async () => {
-      await toolData.fetchAllTools();
-      setData(toolData.data);
-    };
     if (data.length === 0) {
-      fetch();
+      fetchTools();
     }
     authContext.refreshAuth();
   }, []);
@@ -62,17 +65,32 @@ const Home = ({ toolData }) => {
 
   const pushLogin = () => history.push('/Login');
 
+  const handleRefresh = async () => {
+    setData([]);
+    await fetchTools();
+  };
+
   return (
     <RootContainer>
       <TopBar>
-        <Typography variant='h3'>Tool Finder</Typography>
+        <Typography variant='h4'>Tool Finder</Typography>
         <ActionContainer>
           <Button
-            color={authContext.authenticated ? 'secondary' : 'primary'}
-            onClick={authContext.authenticated ? authContext.logout : pushLogin}
+            color='primary'
+            style={{ marginRight: 5 }}
+            disabled={data.length === 0}
+            onClick={handleRefresh}
+            endIcon={<ReplayRoundedIcon />}
           >
-            {authContext.authenticated ? 'Logout' : 'Login'}
+            Refresh
           </Button>
+          {authContext.authenticated ? (
+            <AccountMenu logout={authContext.logout} />
+          ) : (
+            <Button color='primary' onClick={pushLogin}>
+              Login
+            </Button>
+          )}
         </ActionContainer>
       </TopBar>
       <FilterAndViewComponent data={data} selectFunction={selectTool} />

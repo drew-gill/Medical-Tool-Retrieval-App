@@ -14,19 +14,29 @@ class Auth {
     return new Date().getTime() < authToken;
   };
 
+  static getUsername = () => JSON.parse(localStorage.getItem('username'));
+
   static login = async (username, password) => {
     const res = true; // Attempt to log the user in
     if (res) {
       // Set a new authToken
       const expTime = JSON.stringify(generateExpirationTime());
-      window.localStorage.setItem(TOKEN_KEY, expTime);
+      localStorage.setItem(TOKEN_KEY, expTime);
+      localStorage.setItem('username', JSON.stringify(username));
     } else {
       // Failed to login, credentials incorrect or something
     }
   };
 
   static logout = () => {
+    localStorage.removeItem('username');
     localStorage.removeItem(TOKEN_KEY);
+  };
+
+  static updateCredentials = async (username, password) => {
+    // Update the credentials in mongodb
+    // Update the username locally
+    localStorage.setItem('username', JSON.stringify(username));
   };
 }
 
@@ -34,7 +44,9 @@ const AuthContext = createContext({
   authenticated: false,
   refreshAuth: () => {},
   login: (username, password) => {},
-  logout: () => {}
+  logout: () => {},
+  getUsername: () => {},
+  updateCredentials: (username, password) => {}
 });
 
 export default Auth;

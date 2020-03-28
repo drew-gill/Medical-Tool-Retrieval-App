@@ -3,10 +3,11 @@ import Auth, { AuthContext } from './Auth';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import Home from './views/Home/Home';
 import ToolView from './views/ToolView/ToolView';
+import AccountView from './views/AccountView/AccountView';
 import NotFound from './views/NotFound';
 
 const App = () => {
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState(Auth.isAuthenticated());
 
   const refreshAuth = useCallback(() => {
     const res = Auth.isAuthenticated();
@@ -24,6 +25,10 @@ const App = () => {
     refreshAuth();
   });
 
+  const getUsername = Auth.getUsername;
+
+  const updateCredentials = Auth.updateCredentials;
+
   useEffect(() => {
     refreshAuth();
   }, []);
@@ -31,11 +36,19 @@ const App = () => {
   return (
     <div>
       <AuthContext.Provider
-        value={{ authenticated, refreshAuth, login, logout }}
+        value={{
+          authenticated,
+          refreshAuth,
+          login,
+          logout,
+          getUsername,
+          updateCredentials
+        }}
       >
         <Switch>
           <Route exact path='/Home' component={Home} />
           <Route exact path='/ToolView/:id' component={ToolView} />
+          <Route exact path='/Account' component={AccountView} />
           <Route exact path='/'>
             {authenticated ? <Redirect to='/Home' /> : <Redirect to='/Login' />}
           </Route>

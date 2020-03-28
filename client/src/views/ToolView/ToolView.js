@@ -20,7 +20,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 
 // Styled components
 const RootContainer = styled.div`
-  margin: 40px;
+  margin: 20px;
   margin-top: 120px;
 `;
 
@@ -123,7 +123,7 @@ const ToolView = ({ toolData }) => {
         <Button
           variant='text'
           color='secondary'
-          startIcon={<DeleteRoundedIcon />}
+          endIcon={<DeleteRoundedIcon />}
           onClick={deleteTool}
         >
           Delete

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 // Custom components
+import { AuthContext } from '../../Auth';
 import { withToolData } from '../../components/ToolDataContext';
 import AddEditToolComponent from '../../components/AddEditToolComponent';
 
@@ -55,6 +56,7 @@ const BackButtonContainer = styled.div`
 `;
 
 const ToolView = ({ toolData }) => {
+  const authContext = useContext(AuthContext);
   const [tool, setTool] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const history = useHistory();
@@ -68,6 +70,7 @@ const ToolView = ({ toolData }) => {
       }
     };
     fetch();
+    authContext.refreshAuth();
   }, []);
 
   const goBack = () => history.goBack();
@@ -137,14 +140,16 @@ const ToolView = ({ toolData }) => {
         </IconButton>
       </BackButtonContainer>
 
-      <AddEditToolComponent tool={tool} actionButtonFunction={updateTool} />
+      {authContext.authenticated && (
+        <AddEditToolComponent tool={tool} actionButtonFunction={updateTool} />
+      )}
 
       <Container maxWidth='md'>
         <ToolViewContainer>
           {renderImage()}
           <Typography variant='h6'>Keywords</Typography>
           {renderKeywords()}
-          {renderDeleteButton()}
+          {authContext.authenticated && renderDeleteButton()}
         </ToolViewContainer>
       </Container>
     </RootContainer>

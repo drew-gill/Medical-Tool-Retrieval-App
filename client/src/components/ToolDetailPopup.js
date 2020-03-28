@@ -1,3 +1,5 @@
+// This file was replaced with the ToolView page
+
 import React, { useState } from 'react';
 import styled from 'styled-components';
 

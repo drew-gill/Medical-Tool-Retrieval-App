@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 
 // Material UI
@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 
 // Custom components
 import { withToolData } from '../../components/ToolDataContext';
+import { AuthContext } from '../../Auth';
 import ToolDetailPopup from '../../components/ToolDetailPopup';
 import FilterAndViewComponent from '../../components/FilterAndViewComponent';
 import AddEditToolComponent from '../../components/AddEditToolComponent';
@@ -16,6 +17,7 @@ const RootContainer = styled.div`
 `;
 
 const Home = ({ toolData }) => {
+  const authContext = useContext(AuthContext);
   const [data, setData] = useState(toolData.data);
   const [selectedTool, setSelectedTool] = useState(null);
 
@@ -27,6 +29,7 @@ const Home = ({ toolData }) => {
     if (data.length === 0) {
       fetch();
     }
+    authContext.refreshAuth();
   }, []);
 
   const addTool = async (image, keywords) => {
@@ -48,7 +51,9 @@ const Home = ({ toolData }) => {
       <Typography variant='h3'>Tool Finder</Typography>
       <FilterAndViewComponent data={data} selectFunction={selectTool} />
 
-      <AddEditToolComponent actionButtonFunction={addTool} />
+      {authContext.authenticated && (
+        <AddEditToolComponent actionButtonFunction={addTool} />
+      )}
 
       <ToolDetailPopup
         tool={selectedTool}

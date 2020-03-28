@@ -6,20 +6,21 @@ const config = require('../config/config.js');
 // are used to prevent errors from asynchronous running.
 //the main testuser instance
 let testUser0 = new User({
-    username: "testadmin123",
+    username: "__test__admin123",
     password: "password1"
 });
 
 
 //used for duplicate username testing
 let testUser1 = new User({
-    username: "testadmin123",
+    username: "__test__admin123",
     password: "32Sdfyadfcvbjcand"
 });
 
 let id, db;
 
 describe('User Schema Unit Tests', () => {
+
     describe('Saving to database', () => {
 
         beforeAll(async () => {
@@ -27,8 +28,8 @@ describe('User Schema Unit Tests', () => {
             await mongoose.set('useCreateIndex', true);
             await mongoose.set('useFindAndModify', false);
 
-            //delete any pre-existing users with a username containing "test"
-            await User.deleteMany({ username: /test/}, function (err) {
+            //delete any pre-existing users with a username containing "__test__"
+            await User.deleteMany({ username: /__test__/}, function (err) {
                 if(err) throw err;
             });
         });
@@ -52,7 +53,7 @@ describe('User Schema Unit Tests', () => {
 
         test('throws an error when password field is incomplete', async(done) => {
             await new User({
-                username: "test2"
+                username: "__test__2"
             }).save((err) => {
                 expect(err).not.toBeNull();
                 done();
@@ -62,21 +63,20 @@ describe('User Schema Unit Tests', () => {
 
         test('saves properly when unique username and any password is supplied', async (done) => {
             let user = new User({
-                username: "test3",
+                username: "__test__3",
                 password: testUser0.password
             });
             await user.save((err, userSave) => {
                 expect(err).toBeNull();
                 id = userSave._id;
                 expect(id).not.toBeNull();
-                expect(userSave.username).toBe("test3");
+                expect(userSave.username).toBe("__test__3");
 
                 //use the usermodel method of compare password to see if the candidatepassword matches the hashed password in the DB.
                 userSave.comparePassword(testUser0.password, function(err, isMatch){
                     if(err) throw err;
                     expect(isMatch).toBe(true);
                 });
-
                 done();
             });
         });
@@ -100,17 +100,14 @@ describe('User Schema Unit Tests', () => {
                     done();
                 });
             });
-
-            
         });
 
 
-
         afterAll(async () => {
-            //delete any users that have a username containing "test"
-            // await User.deleteMany({ username: /test/}, function (err) {
-            //     if(err) throw err;
-            // });
+            //delete any users that have a username containing "__test__"
+            await User.deleteMany({ username: /__test__/}, function (err) {
+                if(err) throw err;
+            });
 
             await mongoose.connection.close();
         });

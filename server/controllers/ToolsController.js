@@ -1,5 +1,4 @@
 const Tool = require('../models/ToolModel.js');
-const Retrieval = require('../models/RetrievalModel.js');
 const fs = require('fs');
 exports.create = async (req, res) => {
   if (!req.file) {
@@ -31,12 +30,12 @@ exports.read = (req, res) => {
 };
 exports.update = (req, res) => {
   Tool.findById({ _id: req.query.id }).then(tool => {
-    if (typeof req.file.buffer != 'undefined') {
+    if (typeof req.file != 'undefined') {
       var img = req.file.buffer;
       tool.image = img;
     }
     if (typeof req.body.keywords != 'undefined') {
-      tool.keywords = req.body.keywords;
+      tool.keywords = JSON.parse(req.body.keywords);
     }
     tool.save().then(data => {
       res.send(data);

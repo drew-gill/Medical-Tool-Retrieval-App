@@ -5,8 +5,7 @@ import styled from 'styled-components';
 // Material UI
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { FormLabel } from '@material-ui/core';
-import Input from '@material-ui/core/Input';
+import TextField from '@material-ui/core/TextField';
 
 const LoginContainer = styled.div`
   width: 300px;
@@ -15,6 +14,7 @@ const LoginContainer = styled.div`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  text-align: center
 `;
 
 const ButtonContainer = styled.div`
@@ -23,11 +23,11 @@ const ButtonContainer = styled.div`
 `;
 
 const useStyles = makeStyles(theme => ({
-    root: {
-      '& > *': {
-        margin: theme.spacing(1),
-      },
+  root: {
+    '& > *': {
+      margin: theme.spacing(1),
     },
+  },
 }));
 
 const Login = () => {
@@ -37,39 +37,24 @@ const Login = () => {
     const [password, setPassword] = useState("");
 
     const validateForm = () => {
-        return username.length > 0 && password.length > 0;
+      return username.length > 0 && password.length > 0;
     }
 
     const handleSubmit = (event) => {
-        event.preventDefault();
+      event.preventDefault();
     }
 
     const history = useHistory();
     const handleRedirect = () => {
-        history.push("/Home");
+      history.push("/Home");
     }
 
     return (
       <LoginContainer>
-          <ButtonContainer>LOGIN</ButtonContainer>   
-          <form onSubmit={handleSubmit}>
-            <form className={classes.root} noValidate autoComplete="off">
-              <FormLabel>Username</FormLabel>
-                <Input
-                  autoFocus
-                  value={username}
-                  type="username"
-                  onChange={e => setUsername(e.target.value)}
-                />
-            </form>
-            <form className={classes.root} noValidate autoComplete="off">
-              <FormLabel>Password</FormLabel>  
-                <Input
-                  value={password}
-                  type="password"
-                  onChange={e => setPassword(e.target.value)}
-                />
-            </form>
+          LOGIN
+          <form className={classes.root} noValidate autoComplete="off" onSubmit={handleSubmit}>
+            <TextField id="username" label="Username" value={username} autoFocus onChange={e => setUsername(e.target.value)} />
+            <TextField id="password" label="Password" value={password} onChange={e => setPassword(e.target.value)} />
             <ButtonContainer>
               <Button disabled={!validateForm()} variant="contained" color='primary'>
                 Sign In

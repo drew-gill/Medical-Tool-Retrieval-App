@@ -29,6 +29,7 @@ const ViewContainer = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
+  text-align: center;
 `;
 
 const BackButtonContainer = styled.div`
@@ -61,26 +62,33 @@ const ToolView = () => {
   const handleConfirmPassword = e => setConfirmPassword(e.target.value);
 
   const validate = () => {
-    let err = false;
-    let errors = {
-      username: '',
-      password: '',
-      confirmPassword: ''
-    };
+    let _errors = { username: '', password: '', confirmPassword: '' };
     if (!username) {
-      err = true;
-      errors['username'] = 'This field is required.';
+      _errors['username'] = 'This field is required.';
+    }
+    if (username.indexOf(' ') !== -1) {
+      _errors['username'] = 'Username cannot contain any spaces.';
+    }
+    if (password.length < 8) {
+      _errors['password'] = 'Password must be at least 8 characters.';
     }
     if (!password) {
-      err = true;
-      errors['password'] = 'This field is required.';
+      _errors['password'] = 'This field is required.';
+    }
+    if (password.indexOf(' ') !== -1) {
+      _errors['password'] = 'Password cannot contain any spaces.';
     }
     if (password !== confirmPassword) {
-      err = true;
-      errors['confirmPassword'] = 'Passwords must match.';
+      _errors['confirmPassword'] = 'Passwords must match.';
     }
-    setErrors(errors);
-    if (err) {
+    setErrors(_errors);
+    console.log(_errors);
+    if (
+      _errors['username'] !== '' ||
+      _errors['password'] !== '' ||
+      _errors['confirmPassword'] !== ''
+    ) {
+      console.log('boo');
       return false;
     } else {
       return true;
@@ -151,20 +159,25 @@ const ToolView = () => {
               value={confirmPassword}
               onChange={handleConfirmPassword}
             />
-            <Button
-              style={{ marginTop: 10 }}
-              fullWidth
-              color='primary'
-              variant='contained'
-              type='submit'
-            >
-              Save
-            </Button>
+            {submitting ? (
+              <CircularProgress style={{ marginTop: 20 }} />
+            ) : (
+              <Button
+                style={{ marginTop: 10 }}
+                fullWidth
+                color='primary'
+                variant='contained'
+                type='submit'
+              >
+                Save
+              </Button>
+            )}
           </form>
           <Button
             onClick={authContext.logout}
             style={{ marginTop: 20 }}
             color='secondary'
+            disabled={submitting}
           >
             Logout
           </Button>

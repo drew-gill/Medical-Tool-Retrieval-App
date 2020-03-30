@@ -7,6 +7,7 @@ import { AuthContext } from '../../Auth';
 import { withToolData } from '../../components/ToolDataContext';
 import AddEditToolComponent from '../../components/AddEditToolComponent';
 
+
 // Material UI
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
@@ -17,6 +18,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import Skeleton from '@material-ui/lab/Skeleton';
+
 
 // Styled components
 const RootContainer = styled.div`
@@ -61,6 +63,11 @@ const ToolView = ({ toolData }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const history = useHistory();
   const { id } = useParams();
+  const [isTiming, setIsTiming] = useState(false);
+  let [timePassed, setTimePassed] = useState(60);
+  let [startTime, setStartTime] = useState(60);
+
+  
 
   useEffect(() => {
     const fetch = async () => {
@@ -72,6 +79,19 @@ const ToolView = ({ toolData }) => {
     fetch();
     authContext.refreshAuth();
   }, []);
+
+  useEffect(() => {
+    if(isTiming) {
+      setInterval(function(){
+
+        let currentTime = new Date;
+        let seconds = currentTime.getSeconds() - startTime.getSeconds();
+        let minutes = currentTime.getMinutes() - startTime.getMinutes();
+
+        setTimePassed(minutes * 60 + seconds);
+      }, 400);
+    }
+  }, [timePassed])
 
   const goBack = () => history.goBack();
 
@@ -85,6 +105,24 @@ const ToolView = ({ toolData }) => {
   const updateTool = async (image, keywords) => {
     const res = await toolData.updateTool(image, keywords, id);
     setTool(res);
+  };
+
+  const addRetrievalListing = async (time, date, id) => {
+      await toolData.addToolRetrieval(timePassed, new Date(Date.now()), id);
+  };
+
+  const toggleTimer = () => {
+    if(!isTiming) {
+      setIsTiming(true);
+      setTimePassed(0);
+      setStartTime(new Date);
+    }
+
+    else {
+     addRetrievalListing(timePassed, new Date(Date.now(), id));
+      setIsTiming(false);
+    }
+
   };
 
   const renderImage = () => {
@@ -131,6 +169,53 @@ const ToolView = ({ toolData }) => {
       );
     }
   };
+  const renderTimer = () => {
+    
+    if(isTiming) {
+      return (
+        <div
+          variant='text'
+          color='primary'
+          
+        >
+          {Math.floor(timePassed / 60)} m : {timePassed % 60} s
+        </div>
+      )
+    }
+    else return;
+  }
+
+  const renderTimerButton = () => {
+
+//change button to finish retrieval and if timing call a separate function that renders the 
+      if(isTiming) {
+      
+        return (
+          <Button
+            variant='text'
+            color='primary'
+            onClick={toggleTimer}
+          >
+            End Retrieval 
+          </Button>
+          
+        )
+        renderTimer();
+      }
+
+      else {
+        return (
+          <Button
+            variant='text'
+            color='primary'
+            onClick={toggleTimer}
+          >
+            Begin Retrieval
+          </Button>
+        )
+      }
+    
+  }
 
   return (
     <RootContainer>
@@ -150,6 +235,8 @@ const ToolView = ({ toolData }) => {
           <Typography variant='h6'>Keywords</Typography>
           {renderKeywords()}
           {authContext.authenticated && renderDeleteButton()}
+          {renderTimerButton()}
+          {renderTimer()}
         </ToolViewContainer>
       </Container>
     </RootContainer>

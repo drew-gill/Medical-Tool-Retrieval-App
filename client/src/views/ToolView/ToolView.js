@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { AuthContext } from '../../Auth';
 import { withToolData } from '../../components/ToolDataContext';
 import AddEditToolComponent from '../../components/AddEditToolComponent';
-import { addToolRetrieval } from '../../apiCalls';
+import { addToolRetrieval, readTool } from '../../apiCalls';
 
 // Material UI
 import Typography from '@material-ui/core/Typography';
@@ -84,8 +84,9 @@ const ToolView = ({ toolData }) => {
         let seconds = currentTime.getSeconds() - startTime.getSeconds();
         let minutes = currentTime.getMinutes() - startTime.getMinutes();
 
-        setTimePassed(minutes * 60 + seconds);
-      }, 400);
+        //if(minutes * 60 + seconds !=  timePassed)
+          setTimePassed(minutes * 60 + seconds);
+      }, 1000);
     }
   }, [timePassed]);
 
@@ -113,8 +114,18 @@ const ToolView = ({ toolData }) => {
       setTimePassed(0);
       setStartTime(new Date());
     } else {
+      console.log(timePassed);
+
+      let doc = readTool(id);
+      console.log(tool);
+      console.log(tool.retrievalHistory.length);
+
       addRetrievalListing(timePassed, new Date(Date.now(), id));
       setIsTiming(false);
+
+      doc = readTool(id);
+      console.log(tool);
+      console.log(tool.retrievalHistory.length);
     }
   };
 

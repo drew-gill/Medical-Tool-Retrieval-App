@@ -28,5 +28,13 @@ toolsRouter.delete('/api/:id',toolController.remove);
 //queries for the specific object given by the ID
 toolsRouter.get('/api/:id',toolController.read);
 
+//append a new retrieval to the tool's retrieval array.
+toolsRouter.post('/api/:id/retrievals', toolController.newRetrieval);
+
+//update a retrieval in the tool specified by the ID
+toolsRouter.put('/api/:id/retrievals', toolController.updateRetrieval);
+
+//remove a retrieval in the tool specified by the ID
+toolsRouter.delete('/api/:id/retrievals', toolController.removeRetrieval);
 
 module.exports = toolsRouter;

@@ -48,4 +48,49 @@ const readTool = async id => {
   return res.data;
 };
 
-export { readAllTools, deleteTool, createTool, readTool, updateTool };
+
+const addToolRetrieval = async (retrievalTime, retrievalDate, id) => {
+  let formData = new FormData();
+  if (retrievalTime) {
+    formData.append('retrievalTime', retrievalTime);
+  }
+  if(retrievalDate){
+    formData.append('retrievalDate', retrievalDate);
+  }
+  const res = await axios.post(`${getUrl()}?id=${id}/retrievals`, formData);
+  const { data } = res;
+  const tool = await readTool(data._id);
+  return tool;
+};
+
+const updateToolRetrieval = async (retrievalId, retrievalTime, retrievalDate, id) => {
+  let formData = new FormData();
+
+  if(retrievalId){
+    formData.append('retrievalId', retrievalId);
+  }
+  if (retrievalTime) {
+    formData.append('retrievalTime', retrievalTime);
+  }
+  if(retrievalDate){
+    formData.append('retrievalDate', retrievalDate);
+  }
+  const res = await axios.put(`${getUrl()}?id=${id}/retrievals`, formData);
+  const { data } = res;
+  const tool = await readTool(data._id);
+  return tool;
+};
+
+const removeToolRetrieval = async (retrievalId, id) => {
+  let formData = new FormData();
+
+  if(retrievalId){
+    formData.append('retrievalId', retrievalId);
+  }
+  const res = await axios.delete(`${getUrl()}?id=${id}/retrievals`, formData);
+  const { data } = res;
+  const tool = await readTool(data._id);
+  return tool;
+};
+
+export { readAllTools, deleteTool, createTool, readTool, updateTool, addToolRetrieval, updateToolRetrieval, removeToolRetrieval };

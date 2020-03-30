@@ -38,14 +38,12 @@ router.put('/api/:id/retrievals', toolController.updateRetrieval);
 //remove a retrieval in the tool specified by the ID
 router.delete('/api/:id/retrievals', toolController.removeRetrieval);
 
-
-
 //note: the flip of the /api/ route was done to avoid conflicts with the tool api above
 //creates a new user based on a username/password
-router.post('/user/api', userController.create);
+router.post('/register/api', userController.create);
 
 //authenticate a user using a username + password
-router.get('/user/api', userController.authenticate);
+router.post('/user/api', userController.authenticate);
 
 //update the user's password
 router.put('/user/api', userController.updatePassword);

@@ -88,15 +88,12 @@ exports.updateRetrieval = (req, res) => {
 
     if(typeof req.body.retrievalId != 'undefined'){
       let retrieval = tool.retrievalHistory.id(req.body.retrievalId);
-      console.log(retrieval);
 
       if(typeof req.body.retrievalTime != 'undefined'){
-        console.log(req.body.retrievalTime);
         retrieval.retrievalTime = req.body.retrievalTime;
       }
 
       if(typeof req.body.retrievalDate != 'undefined'){
-        console.log(req.body.retrievalDate);
 
         retrieval.retrievalDate = req.body.retrievalDate;
       }

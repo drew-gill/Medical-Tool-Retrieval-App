@@ -12,7 +12,6 @@ const getUrl = () => {
   }
 };
 
-
 //use for user CRUD
 const getUrlUser = () => {
   if (process.env.NODE_ENV === 'production') {
@@ -115,6 +114,23 @@ const createUser = async(username, password) => {
   return user;
 }
 
+const VerifyLogin = async (username, password) => {
+  const data = {
+    username: username,
+    password: password
+  }
+  
+  const res = await axios.post(getUrlUser(), data);
+  
+  if (res.status === 200) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
 
 
-export { readAllTools, deleteTool, createTool, readTool, updateTool, addToolRetrieval, updateToolRetrieval, removeToolRetrieval };
+
+
+export { readAllTools, deleteTool, createTool, readTool, updateTool, addToolRetrieval, updateToolRetrieval, removeToolRetrieval, VerifyLogin };

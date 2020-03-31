@@ -68,7 +68,9 @@ const RetrievalComponent = ({ addRetrieval }) => {
   return (
     <React.Fragment>
       {isLoading ? (
-        <CircularProgress style={{ alignSelf: 'center' }} />
+        <CircularProgress
+          style={{ alignSelf: 'center', marginTop: 10, marginBottom: 20 }}
+        />
       ) : (
         <React.Fragment>
           {renderTimer()}

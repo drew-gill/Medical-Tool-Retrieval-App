@@ -16,6 +16,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const RootContainer = styled.div`
   width: 100%;
@@ -54,6 +55,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState(undefined);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
     return username.length > 0 && password.length > 0;
@@ -61,11 +63,12 @@ const Login = () => {
 
   const handleSubmit = async event => {
     event.preventDefault();
-
+    setIsLoading(true);
     try {
       await authContext.login(username, password);
     } catch (error) {
       setErrors(error.message);
+      setIsLoading(false);
     }
   };
 
@@ -130,16 +133,21 @@ const Login = () => {
                 )
               }}
             />
-            <Button
-              disabled={!validateForm()}
-              variant='contained'
-              disableElevation
-              disableRipple
-              color='primary'
-              type='submit'
-            >
-              Sign In
-            </Button>
+            {isLoading ? (
+              <CircularProgress />
+            ) : (
+              <Button
+                disabled={!validateForm()}
+                variant='contained'
+                disableElevation
+                disableRipple
+                color='primary'
+                type='submit'
+              >
+                Sign In
+              </Button>
+            )}
+
             <Divider style={{ margin: '30px 0px' }} variant='middle' />
             <Typography variant='body2'>
               Use the button below to continue without administrative access.

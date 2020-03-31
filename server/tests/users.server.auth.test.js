@@ -62,7 +62,7 @@ describe('User Authentication Unit Tests', () => {
                     if(err) throw err;
 
                     expect(user).toBeNull();
-                    expect(reason).toBe(0);
+                    expect(reason).toBe(3);
                     done();
                 });
 

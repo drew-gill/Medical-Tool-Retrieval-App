@@ -5,7 +5,7 @@ import Home from './views/Home/Home';
 import ToolView from './views/ToolView/ToolView';
 import AccountView from './views/AccountView/AccountView';
 import NotFound from './views/NotFound';
-import Login from "./views/Login/Login";
+import Login from './views/Login/Login';
 
 const App = () => {
   const [authenticated, setAuthenticated] = useState(Auth.isAuthenticated());
@@ -50,7 +50,9 @@ const App = () => {
           <Route exact path='/Home' component={Home} />
           <Route exact path='/ToolView/:id' component={ToolView} />
           <Route exact path='/Account' component={AccountView} />
-          <Route exact path="/Login" component={Login} />
+          <Route exact path='/Login' component={Login}>
+            {authenticated ? <Redirect to='/Home' /> : <Login />}
+          </Route>
           <Route exact path='/'>
             {authenticated ? <Redirect to='/Home' /> : <Redirect to='/Login' />}
           </Route>

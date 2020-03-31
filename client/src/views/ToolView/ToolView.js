@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import { AuthContext } from '../../Auth';
 import { withToolData } from '../../components/ToolDataContext';
 import AddEditToolComponent from '../../components/AddEditToolComponent';
+import { addToolRetrieval } from '../../apiCalls';
+import RetrievalComponent from '../../components/RetrievalComponent';
 
 // Material UI
 import Typography from '@material-ui/core/Typography';
@@ -87,6 +89,13 @@ const ToolView = ({ toolData }) => {
     setTool(res);
   };
 
+  const addRetrieval = async timePassed => {
+    console.log(tool);
+    const res = await addToolRetrieval(timePassed, id);
+    setTool(res);
+    console.log(res);
+  };
+
   const renderImage = () => {
     if (tool === null) {
       return (
@@ -149,6 +158,7 @@ const ToolView = ({ toolData }) => {
           {renderImage()}
           <Typography variant='h6'>Keywords</Typography>
           {renderKeywords()}
+          <RetrievalComponent addRetrieval={addRetrieval} />
           {authContext.authenticated && renderDeleteButton()}
         </ToolViewContainer>
       </Container>

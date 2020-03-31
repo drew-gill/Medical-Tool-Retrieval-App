@@ -26,7 +26,7 @@ const AccountMenu = ({ logout }) => {
         <AccountCircleRoundedIcon />
       </IconButton>
       <Menu anchorEl={anchor} open={Boolean(anchor)} onClose={handleClose}>
-        <MenuItem onClick={handleAccount}>Account</MenuItem>
+        {/* <MenuItem onClick={handleAccount}>Account</MenuItem> */}
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </React.Fragment>

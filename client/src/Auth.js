@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import { VerifyLogin } from './apiCalls'
+import { VerifyLogin } from './apiCalls';
 
 // Settings
 const TOKEN_KEY = 'authToken';
@@ -16,22 +16,16 @@ class Auth {
   };
 
   static getUsername = () => JSON.parse(localStorage.getItem('username'));
-  
+
   static login = async (username, password) => {
     try {
-      const res = await VerifyLogin(username, password); // Attempt to log the user in
-      if (res) {
-        // Set a new authToken
-        const expTime = JSON.stringify(generateExpirationTime());
-        localStorage.setItem(TOKEN_KEY, expTime);
-        localStorage.setItem('username', JSON.stringify(username));
-      } else {
-        // Failed to login, credentials incorrect or something
-        console.log("Failed to login!!!")
-      }
-    }
-    catch (e) {
-      console.error(e);
+      await VerifyLogin(username, password); // Attempt to log the user in
+      // Set a new authToken
+      const expTime = JSON.stringify(generateExpirationTime());
+      localStorage.setItem(TOKEN_KEY, expTime);
+      localStorage.setItem('username', JSON.stringify(username));
+    } catch (error) {
+      throw new Error(error.message);
     }
   };
 
@@ -45,7 +39,6 @@ class Auth {
     // Update the username locally
     localStorage.setItem('username', JSON.stringify(username));
   };
-
 }
 
 const AuthContext = createContext({

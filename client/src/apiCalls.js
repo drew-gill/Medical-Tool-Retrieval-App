@@ -1,15 +1,25 @@
 import axios from 'axios';
 
-const devUrl = 'http://localhost:5000/api/';
-const prodUrl = 'https://cen3031-final-project.herokuapp.com/api/';
+const devUrl = 'http://localhost:5000/';
+const prodUrl = 'https://cen3031-final-project.herokuapp.com/';
 
+//use for tool CRUD
 const getUrl = () => {
   if (process.env.NODE_ENV === 'production') {
-    return prodUrl;
+    return prodUrl + 'api/';
   } else {
-    return devUrl;
+    return devUrl + 'api/';
   }
 };
+
+//use for user CRUD
+const getUrlUser = () => {
+  if (process.env.NODE_ENV === 'production') {
+    return prodUrl + 'user/api/';
+  } else {
+    return devUrl + 'user/api/';
+  }
+}
 
 const readAllTools = async () => {
   const res = await axios.get(getUrl());
@@ -91,13 +101,37 @@ const removeToolRetrieval = async (retrievalId, id) => {
   return tool;
 };
 
-export {
-  readAllTools,
-  deleteTool,
-  createTool,
-  readTool,
-  updateTool,
-  addToolRetrieval,
-  updateToolRetrieval,
-  removeToolRetrieval
-};
+//this might work? not sure
+//I havent tested this functionality at all, this was a branch merged into mine from drews - willy
+const createUser = async(username, password) => {
+  let formData = new FormData();
+  formData.append('username', username);
+  formData.append('password', password);
+  const res = await axios.post(getUrlUser(), formData);
+  const { data } = res;
+  const user = await readTool(data._id); //change this for user data**************
+  return user;
+}
+
+const VerifyLogin = async (username, password) => {
+  const data = {
+    username: username,
+    password: password
+  }
+
+  try {
+    const res = await axios.post(getUrlUser(), data);
+    if (res.status === 200) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  catch (e) {
+    console.error(e);
+  }
+  return false;
+}
+
+export { readAllTools, deleteTool, createTool, readTool, updateTool, addToolRetrieval, updateToolRetrieval, removeToolRetrieval, VerifyLogin };

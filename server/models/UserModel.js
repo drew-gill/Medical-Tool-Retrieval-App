@@ -73,9 +73,9 @@ UserSchema.methods.incLoginAttempts = function(cb){
 
 //expose this enum on the model.
 let reasons = UserSchema.statics.failedLogin = {
-    NOT_FOUND: 0,
     PASSWORD_INCORRECT: 1,
-    MAX_ATTEMPTS: 2
+    MAX_ATTEMPTS: 2,
+    NOT_FOUND: 3
 };
 
 //this is the main method for authenticating a user in the database

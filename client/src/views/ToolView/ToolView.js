@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { AuthContext } from '../../Auth';
 import { withToolData } from '../../components/ToolDataContext';
 import AddEditToolComponent from '../../components/AddEditToolComponent';
-import { addToolRetrieval, readTool } from '../../apiCalls';
+import { addToolRetrieval } from '../../apiCalls';
 
 // Material UI
 import Typography from '@material-ui/core/Typography';
@@ -63,8 +63,8 @@ const ToolView = ({ toolData }) => {
   const history = useHistory();
   const { id } = useParams();
   const [isTiming, setIsTiming] = useState(false);
-  let [timePassed, setTimePassed] = useState(60);
-  let [startTime, setStartTime] = useState(60);
+  const [timePassed, setTimePassed] = useState(0);
+  const [intervalId, setIntervalId] = useState(null);
 
   useEffect(() => {
     const fetch = async () => {
@@ -79,16 +79,15 @@ const ToolView = ({ toolData }) => {
 
   useEffect(() => {
     if (isTiming) {
-      setInterval(function() {
-        let currentTime = new Date();
-        let seconds = currentTime.getSeconds() - startTime.getSeconds();
-        let minutes = currentTime.getMinutes() - startTime.getMinutes();
-
-        //if(minutes * 60 + seconds !=  timePassed)
-          setTimePassed(minutes * 60 + seconds);
+      const intId = setInterval(() => {
+        setTimePassed(oldTime => oldTime + 1);
       }, 1000);
+      setIntervalId(intId);
+    } else if (intervalId !== null) {
+      clearInterval(intervalId);
+      setIntervalId(null);
     }
-  }, [timePassed]);
+  }, [isTiming]);
 
   const goBack = () => history.goBack();
 
@@ -104,28 +103,19 @@ const ToolView = ({ toolData }) => {
     setTool(res);
   };
 
-  const addRetrievalListing = async (time, date, id) => {
-    await addToolRetrieval(timePassed, new Date(Date.now()), id);
-  };
-
-  const toggleTimer = () => {
+  const toggleTimer = async () => {
     if (!isTiming) {
       setIsTiming(true);
-      setTimePassed(0);
-      setStartTime(new Date());
     } else {
-      console.log(timePassed);
-
-      let doc = readTool(id);
-      console.log(tool);
-      console.log(tool.retrievalHistory.length);
-
-      addRetrievalListing(timePassed, new Date(Date.now(), id));
       setIsTiming(false);
 
-      doc = readTool(id);
       console.log(tool);
-      console.log(tool.retrievalHistory.length);
+
+      const res = await addToolRetrieval(timePassed, id);
+
+      console.log(res);
+      setTool(res);
+      setTimePassed(0);
     }
   };
 
@@ -173,32 +163,31 @@ const ToolView = ({ toolData }) => {
       );
     }
   };
+
   const renderTimer = () => {
     if (isTiming) {
       return (
-        <div variant='text' color='primary'>
+        <Typography style={{ marginTop: 10 }} variant='body1'>
           {Math.floor(timePassed / 60)} m : {timePassed % 60} s
-        </div>
+        </Typography>
       );
     } else return;
   };
 
   const renderTimerButton = () => {
     //change button to finish retrieval and if timing call a separate function that renders the
-    if (isTiming) {
-      return (
-        <Button variant='text' color='primary' onClick={toggleTimer}>
-          End Retrieval
-        </Button>
-      );
-      renderTimer();
-    } else {
-      return (
-        <Button variant='text' color='primary' onClick={toggleTimer}>
-          Begin Retrieval
-        </Button>
-      );
-    }
+    const text = isTiming ? 'End Retrieval' : 'Start Retrieval';
+
+    return (
+      <Button
+        style={{ marginTop: 10, marginBottom: 20 }}
+        variant='text'
+        color='primary'
+        onClick={toggleTimer}
+      >
+        {text}
+      </Button>
+    );
   };
 
   return (
@@ -218,9 +207,9 @@ const ToolView = ({ toolData }) => {
           {renderImage()}
           <Typography variant='h6'>Keywords</Typography>
           {renderKeywords()}
-          {authContext.authenticated && renderDeleteButton()}
-          {renderTimerButton()}
           {renderTimer()}
+          {renderTimerButton()}
+          {authContext.authenticated && renderDeleteButton()}
         </ToolViewContainer>
       </Container>
     </RootContainer>

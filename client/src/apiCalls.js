@@ -104,6 +104,7 @@ const removeToolRetrieval = async (retrievalId, id) => {
 };
 
 //this might work? not sure
+//I havent tested this functionality at all, this was a branch merged into mine from drews - willy
 const createUser = async(username, password) => {
   let formData = new FormData();
   formData.append('username', username);
@@ -119,18 +120,20 @@ const VerifyLogin = async (username, password) => {
     username: username,
     password: password
   }
-  
-  const res = await axios.post(getUrlUser(), data);
-  
-  if (res.status === 200) {
-    return true;
+
+  try {
+    const res = await axios.post(getUrlUser(), data);
+    if (res.status === 200) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
-  else {
-    return false;
+  catch (e) {
+    console.error(e);
   }
+  return false;
 }
-
-
-
 
 export { readAllTools, deleteTool, createTool, readTool, updateTool, addToolRetrieval, updateToolRetrieval, removeToolRetrieval, VerifyLogin };

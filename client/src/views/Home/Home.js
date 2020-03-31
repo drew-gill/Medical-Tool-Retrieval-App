@@ -81,13 +81,14 @@ const Home = ({ toolData }) => {
             disabled={data.length === 0}
             onClick={handleRefresh}
             endIcon={<ReplayRoundedIcon />}
+            disableElevation
           >
             Refresh
           </Button>
           {authContext.authenticated ? (
             <AccountMenu logout={authContext.logout} />
           ) : (
-            <Button color='primary' onClick={pushLogin}>
+            <Button color='primary' onClick={pushLogin} disableElevation>
               Login
             </Button>
           )}

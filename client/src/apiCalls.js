@@ -19,7 +19,7 @@ const getUrlUser = () => {
   } else {
     return devUrl + 'user/api/';
   }
-}
+};
 
 const readAllTools = async () => {
   const res = await axios.get(getUrl());
@@ -103,7 +103,7 @@ const removeToolRetrieval = async (retrievalId, id) => {
 
 //this might work? not sure
 //I havent tested this functionality at all, this was a branch merged into mine from drews - willy
-const createUser = async(username, password) => {
+const createUser = async (username, password) => {
   let formData = new FormData();
   formData.append('username', username);
   formData.append('password', password);
@@ -111,27 +111,29 @@ const createUser = async(username, password) => {
   const { data } = res;
   const user = await readTool(data._id); //change this for user data**************
   return user;
-}
+};
 
 const VerifyLogin = async (username, password) => {
   const data = {
     username: username,
     password: password
-  }
+  };
 
   try {
-    const res = await axios.post(getUrlUser(), data);
-    if (res.status === 200) {
-      return true;
-    }
-    else {
-      return false;
-    }
+    await axios.post(getUrlUser(), data);
+  } catch (error) {
+    throw new Error(error.response.data.message);
   }
-  catch (e) {
-    console.error(e);
-  }
-  return false;
-}
+};
 
-export { readAllTools, deleteTool, createTool, readTool, updateTool, addToolRetrieval, updateToolRetrieval, removeToolRetrieval, VerifyLogin };
+export {
+  readAllTools,
+  deleteTool,
+  createTool,
+  readTool,
+  updateTool,
+  addToolRetrieval,
+  updateToolRetrieval,
+  removeToolRetrieval,
+  VerifyLogin
+};

@@ -178,7 +178,13 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
                 }}
               />
               <label htmlFor='image-upload-input'>
-                <Button variant='contained' color='primary' component='span'>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  component='span'
+                  disableRipple
+                  disableElevation
+                >
                   Upload An Image
                 </Button>
               </label>

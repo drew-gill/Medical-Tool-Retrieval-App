@@ -7,6 +7,7 @@ import { AuthContext } from '../../Auth';
 import { withToolData } from '../../components/ToolDataContext';
 import AddEditToolComponent from '../../components/AddEditToolComponent';
 import { addToolRetrieval } from '../../apiCalls';
+import RetrievalComponent from '../../components/RetrievalComponent';
 
 // Material UI
 import Typography from '@material-ui/core/Typography';
@@ -62,9 +63,6 @@ const ToolView = ({ toolData }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const history = useHistory();
   const { id } = useParams();
-  const [isTiming, setIsTiming] = useState(false);
-  const [timePassed, setTimePassed] = useState(0);
-  const [intervalId, setIntervalId] = useState(null);
 
   useEffect(() => {
     const fetch = async () => {
@@ -76,18 +74,6 @@ const ToolView = ({ toolData }) => {
     fetch();
     authContext.refreshAuth();
   }, []);
-
-  useEffect(() => {
-    if (isTiming) {
-      const intId = setInterval(() => {
-        setTimePassed(oldTime => oldTime + 1);
-      }, 1000);
-      setIntervalId(intId);
-    } else if (intervalId !== null) {
-      clearInterval(intervalId);
-      setIntervalId(null);
-    }
-  }, [isTiming]);
 
   const goBack = () => history.goBack();
 
@@ -103,20 +89,11 @@ const ToolView = ({ toolData }) => {
     setTool(res);
   };
 
-  const toggleTimer = async () => {
-    if (!isTiming) {
-      setIsTiming(true);
-    } else {
-      setIsTiming(false);
-
-      console.log(tool);
-
-      const res = await addToolRetrieval(timePassed, id);
-
-      console.log(res);
-      setTool(res);
-      setTimePassed(0);
-    }
+  const addRetrieval = async timePassed => {
+    console.log(tool);
+    const res = await addToolRetrieval(timePassed, id);
+    setTool(res);
+    console.log(res);
   };
 
   const renderImage = () => {
@@ -164,32 +141,6 @@ const ToolView = ({ toolData }) => {
     }
   };
 
-  const renderTimer = () => {
-    if (isTiming) {
-      return (
-        <Typography style={{ marginTop: 10 }} variant='body1'>
-          {Math.floor(timePassed / 60)} m : {timePassed % 60} s
-        </Typography>
-      );
-    } else return;
-  };
-
-  const renderTimerButton = () => {
-    //change button to finish retrieval and if timing call a separate function that renders the
-    const text = isTiming ? 'End Retrieval' : 'Start Retrieval';
-
-    return (
-      <Button
-        style={{ marginTop: 10, marginBottom: 20 }}
-        variant='text'
-        color='primary'
-        onClick={toggleTimer}
-      >
-        {text}
-      </Button>
-    );
-  };
-
   return (
     <RootContainer>
       <BackButtonContainer>
@@ -207,8 +158,7 @@ const ToolView = ({ toolData }) => {
           {renderImage()}
           <Typography variant='h6'>Keywords</Typography>
           {renderKeywords()}
-          {renderTimer()}
-          {renderTimerButton()}
+          <RetrievalComponent addRetrieval={addRetrieval} />
           {authContext.authenticated && renderDeleteButton()}
         </ToolViewContainer>
       </Container>

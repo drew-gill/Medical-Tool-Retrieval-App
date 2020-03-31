@@ -8,6 +8,7 @@ import { withToolData } from '../../components/ToolDataContext';
 import AddEditToolComponent from '../../components/AddEditToolComponent';
 import { addToolRetrieval } from '../../apiCalls';
 import RetrievalComponent from '../../components/RetrievalComponent';
+import RetrievalChart from '../../components/RetrievalChart';
 
 // Material UI
 import Typography from '@material-ui/core/Typography';
@@ -18,6 +19,7 @@ import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
+import Divider from '@material-ui/core/Divider';
 import Skeleton from '@material-ui/lab/Skeleton';
 
 // Styled components
@@ -124,6 +126,20 @@ const ToolView = ({ toolData }) => {
     return <KeywordContainer>{comp}</KeywordContainer>;
   };
 
+  const renderChart = () => {
+    if (authContext.authenticated) {
+      let comp = null;
+      if (tool === null) {
+        comp = <Skeleton variant='rect' width='100%' height={400} />;
+      } else {
+        comp = <RetrievalChart retrievalHistory={tool.retrievalHistory} />;
+      }
+      return comp;
+    } else {
+      return;
+    }
+  };
+
   const renderDeleteButton = () => {
     if (isDeleting) {
       return <CircularProgress />;
@@ -159,6 +175,10 @@ const ToolView = ({ toolData }) => {
           <Typography variant='h6'>Keywords</Typography>
           {renderKeywords()}
           <RetrievalComponent addRetrieval={addRetrieval} />
+          {renderChart()}
+          {authContext.authenticated && (
+            <Divider style={{ padding: '20px 0px' }} />
+          )}
           {authContext.authenticated && renderDeleteButton()}
         </ToolViewContainer>
       </Container>

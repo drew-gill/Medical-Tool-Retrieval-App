@@ -102,7 +102,15 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
   }, [tool]);
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    if (variant === 'edit') {
+      setKeywords(tool.keywords);
+      setImg(`data:image/jpg;base64, ${tool.image.toString('base64')}`);
+      setImgData(null);
+    }
+  };
+
   const handleAction = async () => {
     if (img !== null && keywords.length > 0) {
       setIsSubmitting(true);
@@ -115,9 +123,10 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
       if (variant !== 'edit') {
         setKeywords([]);
         setImg(null);
+        setOpen(false);
+      } else {
+        setOpen(false);
       }
-      // Close the modal
-      handleClose();
     } else {
       setError(true);
     }

@@ -58,15 +58,9 @@ const readTool = async id => {
   return res.data;
 };
 
-const addToolRetrieval = async (retrievalTime, retrievalDate, id) => {
-  let formData = new FormData();
-  if (retrievalTime) {
-    formData.append('retrievalTime', retrievalTime);
-  }
-  if (retrievalDate) {
-    formData.append('retrievalDate', retrievalDate);
-  }
-  const res = await axios.post(`${getUrl()}?id=${id}/retrievals`, formData);
+const addToolRetrieval = async (retrievalTime, id) => {
+  const payload = { retrievalTime };
+  const res = await axios.post(`${getUrl()}retrievals/?id=${id}`, payload);
   const { data } = res;
   const tool = await readTool(data._id);
   return tool;

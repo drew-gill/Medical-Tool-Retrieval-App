@@ -18,15 +18,20 @@ class Auth {
   static getUsername = () => JSON.parse(localStorage.getItem('username'));
   
   static login = async (username, password) => {
-    const res = await VerifyLogin(username, password); // Attempt to log the user in
-    if (res) {
-      // Set a new authToken
-      const expTime = JSON.stringify(generateExpirationTime());
-      localStorage.setItem(TOKEN_KEY, expTime);
-      localStorage.setItem('username', JSON.stringify(username));
-    } else {
-      // Failed to login, credentials incorrect or something
-      console.log("Failed to login!!!")
+    try {
+      const res = await VerifyLogin(username, password); // Attempt to log the user in
+      if (res) {
+        // Set a new authToken
+        const expTime = JSON.stringify(generateExpirationTime());
+        localStorage.setItem(TOKEN_KEY, expTime);
+        localStorage.setItem('username', JSON.stringify(username));
+      } else {
+        // Failed to login, credentials incorrect or something
+        console.log("Failed to login!!!")
+      }
+    }
+    catch (e) {
+      console.error(e);
     }
   };
 
@@ -40,6 +45,7 @@ class Auth {
     // Update the username locally
     localStorage.setItem('username', JSON.stringify(username));
   };
+
 }
 
 const AuthContext = createContext({

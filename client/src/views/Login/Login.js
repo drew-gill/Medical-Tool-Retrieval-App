@@ -52,8 +52,7 @@ const Login = () => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [retryUsername, setRetryUsername] = useState(false);
-  const [retryPassword, setRetryPassword] = useState(false);
+  const [errors, setErrors] = useState(undefined);
   const [showPassword, setShowPassword] = useState(false);
 
   const validateForm = () => {
@@ -62,12 +61,11 @@ const Login = () => {
 
   const handleSubmit = async event => {
     event.preventDefault();
-    await authContext.login(username, password);
-    if (history.location.pathname !== '/Login') {
-      console.log('successfuly logged in');
-    } else {
-      setRetryUsername(true);
-      setRetryPassword(true);
+
+    try {
+      await authContext.login(username, password);
+    } catch (error) {
+      setErrors(error.message);
     }
   };
 
@@ -101,10 +99,9 @@ const Login = () => {
               autoFocus
               onChange={e => {
                 setUsername(e.target.value);
-                setRetryUsername(false);
               }}
-              error={retryUsername}
-              helperText={retryUsername ? 'Possible Invalid Username!' : ' '}
+              error={errors !== undefined}
+              helperText={errors}
               fullWidth
             />
             <TextField
@@ -116,10 +113,9 @@ const Login = () => {
               margin='dense'
               onChange={e => {
                 setPassword(e.target.value);
-                setRetryPassword(false);
               }}
-              error={retryPassword}
-              helperText={retryPassword ? 'Possible Invalid Password!' : ' '}
+              error={errors !== undefined}
+              helperText={errors}
               fullWidth
               InputProps={{
                 endAdornment: (

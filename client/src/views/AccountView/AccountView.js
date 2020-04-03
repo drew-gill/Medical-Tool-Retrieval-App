@@ -17,8 +17,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Styled components
 const RootContainer = styled.div`
-  margin: 20px;
-  margin-top: 120px;
+  padding-top: 120px;
+  padding-bottom: 40px;
 `;
 
 const ViewContainer = styled.div`
@@ -40,12 +40,12 @@ const BackButtonContainer = styled.div`
 `;
 
 // Styles
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
-      margin: theme.spacing(1)
-    }
-  }
+      margin: theme.spacing(1),
+    },
+  },
 }));
 
 const ToolView = () => {
@@ -58,7 +58,7 @@ const ToolView = () => {
   const [errors, setErrors] = useState({
     username: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -68,9 +68,9 @@ const ToolView = () => {
   }, []);
 
   const goBack = () => history.goBack();
-  const handleUsername = e => setUsername(e.target.value);
-  const handlePassword = e => setPassword(e.target.value);
-  const handleConfirmPassword = e => setConfirmPassword(e.target.value);
+  const handleUsername = (e) => setUsername(e.target.value);
+  const handlePassword = (e) => setPassword(e.target.value);
+  const handleConfirmPassword = (e) => setConfirmPassword(e.target.value);
 
   const validate = () => {
     let _errors = { username: '', password: '', confirmPassword: '' };
@@ -105,7 +105,7 @@ const ToolView = () => {
     }
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
       // Update the user
@@ -114,7 +114,7 @@ const ToolView = () => {
         await authContext.updateCredentials(username, password);
       } catch (error) {
         setErrors({
-          username: error.message
+          username: error.message,
         });
       }
       setSubmitting(false);

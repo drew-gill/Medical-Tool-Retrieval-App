@@ -4,6 +4,7 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import ToolData, { ToolDataContext } from './components/ToolDataContext';
+import './index.css';
 
 ReactDOM.render(
   <ToolDataContext.Provider value={new ToolData()}>

@@ -24,8 +24,8 @@ import Skeleton from '@material-ui/lab/Skeleton';
 
 // Styled components
 const RootContainer = styled.div`
-  margin: 20px;
-  margin-top: 120px;
+  padding-top: 120px;
+  padding-bottom: 40px;
 `;
 
 const ToolViewContainer = styled.div`
@@ -91,7 +91,7 @@ const ToolView = ({ toolData }) => {
     setTool(res);
   };
 
-  const addRetrieval = async timePassed => {
+  const addRetrieval = async (timePassed) => {
     console.log(tool);
     const res = await addToolRetrieval(timePassed, id);
     setTool(res);

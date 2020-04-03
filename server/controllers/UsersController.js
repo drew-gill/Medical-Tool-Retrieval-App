@@ -7,10 +7,19 @@ exports.create = async (req, res) => {
   });
 };
 
-exports.updatePassword = (req, res) => {
+exports.updateUser = (req, res) => {
   User.findOne({ username: req.body.username }).then(user => {
     if (user) {
-      user.password = req.body.password;
+      if (req.body.newUsername) {
+        user.username = req.body.newUsername;
+      }
+      if (req.body.newPassword) {
+        user.password = req.body.newPassword;
+      }
+    } else {
+      res
+        .status(404)
+        .send({ message: 'An unexpected error occurred. Please try again.' });
     }
     user.save().then(data => {
       res.send(data);

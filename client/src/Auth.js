@@ -1,5 +1,5 @@
-import React, { createContext } from 'react';
-import { VerifyLogin } from './apiCalls';
+import { createContext } from 'react';
+import { VerifyLogin, updateUser } from './apiCalls';
 
 // Settings
 const TOKEN_KEY = 'authToken';
@@ -34,10 +34,18 @@ class Auth {
     localStorage.removeItem(TOKEN_KEY);
   };
 
-  static updateCredentials = async (username, password) => {
-    // Update the credentials in mongodb
-    // Update the username locally
-    localStorage.setItem('username', JSON.stringify(username));
+  static updateCredentials = async (
+    newUsername = undefined,
+    newPassword = undefined
+  ) => {
+    try {
+      await updateUser(this.getUsername(), newUsername, newPassword);
+      if (newUsername) {
+        localStorage.setItem('username', JSON.stringify(newUsername));
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
   };
 }
 
@@ -47,7 +55,7 @@ const AuthContext = createContext({
   login: (username, password) => {},
   logout: () => {},
   getUsername: () => {},
-  updateCredentials: (username, password) => {}
+  updateCredentials: (newUsername, newPassword) => {}
 });
 
 export default Auth;

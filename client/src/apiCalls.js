@@ -113,6 +113,24 @@ const createUser = async (username, password) => {
   return user;
 };
 
+const updateUser = async (
+  currUsername,
+  newUsername = undefined,
+  newPassword = undefined
+) => {
+  const payload = {
+    username: currUsername,
+    newUsername: newUsername,
+    newPassword: newPassword
+  };
+
+  try {
+    await axios.put(getUrlUser(), payload);
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
+};
+
 const VerifyLogin = async (username, password) => {
   const data = {
     username: username,
@@ -135,5 +153,6 @@ export {
   addToolRetrieval,
   updateToolRetrieval,
   removeToolRetrieval,
-  VerifyLogin
+  VerifyLogin,
+  updateUser
 };

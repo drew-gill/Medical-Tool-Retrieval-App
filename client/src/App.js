@@ -35,31 +35,29 @@ const App = () => {
   }, []);
 
   return (
-    <div>
-      <AuthContext.Provider
-        value={{
-          authenticated,
-          refreshAuth,
-          login,
-          logout,
-          getUsername,
-          updateCredentials
-        }}
-      >
-        <Switch>
-          <Route exact path='/Home' component={Home} />
-          <Route exact path='/ToolView/:id' component={ToolView} />
-          <Route exact path='/Account' component={AccountView} />
-          <Route exact path='/Login' component={Login}>
-            {authenticated ? <Redirect to='/Home' /> : <Login />}
-          </Route>
-          <Route exact path='/'>
-            {authenticated ? <Redirect to='/Home' /> : <Redirect to='/Login' />}
-          </Route>
-          <Route component={NotFound} />
-        </Switch>
-      </AuthContext.Provider>
-    </div>
+    <AuthContext.Provider
+      value={{
+        authenticated,
+        refreshAuth,
+        login,
+        logout,
+        getUsername,
+        updateCredentials,
+      }}
+    >
+      <Switch>
+        <Route exact path='/Home' component={Home} />
+        <Route exact path='/ToolView/:id' component={ToolView} />
+        <Route exact path='/Account' component={AccountView} />
+        <Route exact path='/Login' component={Login}>
+          {authenticated ? <Redirect to='/Home' /> : <Login />}
+        </Route>
+        <Route exact path='/'>
+          {authenticated ? <Redirect to='/Home' /> : <Redirect to='/Login' />}
+        </Route>
+        <Route component={NotFound} />
+      </Switch>
+    </AuthContext.Provider>
   );
 };
 

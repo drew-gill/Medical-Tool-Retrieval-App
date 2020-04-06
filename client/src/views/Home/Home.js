@@ -17,7 +17,7 @@ import AddEditToolComponent from '../../components/AddEditToolComponent';
 
 // Styled components
 const RootContainer = styled.div`
-  margin: 40px;
+  padding: 40px 0;
 `;
 
 const TopBar = styled.div`
@@ -54,12 +54,12 @@ const Home = ({ toolData }) => {
     setData(toolData.data);
   };
 
-  const removeTool = async id => {
+  const removeTool = async (id) => {
     await toolData.deleteTool(id);
     setData(toolData.data);
   };
 
-  const selectTool = item => {
+  const selectTool = (item) => {
     setSelectedTool(item);
   };
 

@@ -45,7 +45,7 @@ router.post('/register/api', userController.create);
 router.post('/user/api', userController.authenticate);
 
 //update the user's password
-router.put('/user/api', userController.updatePassword);
+router.put('/user/api', userController.updateUser);
 
 //remove the user from the database
 router.delete('/user/api', userController.remove);

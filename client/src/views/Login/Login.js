@@ -20,7 +20,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 const RootContainer = styled.div`
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,12 +38,12 @@ const ViewContainer = styled.div`
   text-align: center;
 `;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
-      margin: theme.spacing(1)
-    }
-  }
+      margin: theme.spacing(1),
+    },
+  },
 }));
 
 const Login = () => {
@@ -61,7 +61,7 @@ const Login = () => {
     return username.length > 0 && password.length > 0;
   };
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     try {
@@ -100,7 +100,7 @@ const Login = () => {
               variant='filled'
               margin='dense'
               autoFocus
-              onChange={e => {
+              onChange={(e) => {
                 setUsername(e.target.value);
               }}
               error={errors !== undefined}
@@ -114,7 +114,7 @@ const Login = () => {
               value={password}
               variant='filled'
               margin='dense'
-              onChange={e => {
+              onChange={(e) => {
                 setPassword(e.target.value);
               }}
               error={errors !== undefined}
@@ -130,7 +130,7 @@ const Login = () => {
                       {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
-                )
+                ),
               }}
             />
             {isLoading ? (

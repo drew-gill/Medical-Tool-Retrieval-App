@@ -54,7 +54,7 @@ const FilterAndViewComponent = ({ data }) => {
 
   const filterData = () => {
     const newData = [];
-    data.forEach(d => {
+    data.forEach((d) => {
       for (let i = 0; i < d.keywords.length; i++) {
         const word = d.keywords[i].toLowerCase();
         if (word.search(searchTerm.toLowerCase()) !== -1) {
@@ -66,9 +66,9 @@ const FilterAndViewComponent = ({ data }) => {
     setFilteredData(newData);
   };
 
-  const handleFilterChange = e => setSearchTerm(e.target.value);
+  const handleFilterChange = (e) => setSearchTerm(e.target.value);
 
-  const handleSelect = item => history.push(`/ToolView/${item._id}`);
+  const handleSelect = (item) => history.push(`/ToolView/${item._id}`);
 
   const generateSkeletons = () => {
     const skeletons = [];
@@ -97,7 +97,7 @@ const FilterAndViewComponent = ({ data }) => {
               <InputAdornment position='start'>
                 <SearchRounded />
               </InputAdornment>
-            )
+            ),
           }}
         />
       </SearchBarForm>

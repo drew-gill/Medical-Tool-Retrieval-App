@@ -8,6 +8,7 @@
     "@material-ui/lab": "^4.0.0-alpha.46",
     "chart.js": "^2.9.3",
     "moment": "^2.24.0",
+    "numeral": "^2.0.6",
     "react": "^16.10.1",
     "react-chartjs-2": "^2.9.0",
     "react-dom": "^16.10.1",

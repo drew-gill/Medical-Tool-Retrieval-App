@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import numeral from 'numeral';
 
 // Custom components
 import { AuthContext } from '../../Auth';
@@ -157,6 +158,19 @@ const ToolView = ({ toolData }) => {
     }
   };
 
+  const renderAvgRetrievalTime = () => {
+    if (tool === null) {
+      return <Skeleton variant='text' width='100%' height={40} />;
+    } else {
+      return (
+        <Typography>
+          Avg. Retrieval Time: {numeral(tool.avgRetrievalTime).format('0.00')}{' '}
+          seconds
+        </Typography>
+      );
+    }
+  };
+
   return (
     <RootContainer>
       <BackButtonContainer>
@@ -176,6 +190,7 @@ const ToolView = ({ toolData }) => {
           {renderKeywords()}
           <RetrievalComponent addRetrieval={addRetrieval} />
           {renderChart()}
+          {renderAvgRetrievalTime()}
           {authContext.authenticated && (
             <Divider style={{ padding: '20px 0px' }} />
           )}

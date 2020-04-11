@@ -112,20 +112,22 @@ const FilterAndViewComponent = ({ data }) => {
             }}
           />
         </SearchBarForm>
-        <TextField
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          style={{ minWidth: 70 }}
-          label='Sort'
-          select
-        >
-          <MenuItem value={FILTER_OPTIONS.DESCENDING}>
-            Retrieval Time (Hi - Lo)
-          </MenuItem>
-          <MenuItem value={FILTER_OPTIONS.ASCENDING}>
-            Retrieval Time (Lo - Hi)
-          </MenuItem>
-        </TextField>
+        {authContext.authenticated && (
+          <TextField
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            style={{ minWidth: 70 }}
+            label='Sort'
+            select
+          >
+            <MenuItem value={FILTER_OPTIONS.DESCENDING}>
+              Retrieval Time (Hi - Lo)
+            </MenuItem>
+            <MenuItem value={FILTER_OPTIONS.ASCENDING}>
+              Retrieval Time (Lo - Hi)
+            </MenuItem>
+          </TextField>
+        )}
       </SearchSortContainer>
 
       <Grid container alignContent='stretch' spacing={3}>

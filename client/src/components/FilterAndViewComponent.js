@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 // Material UI
 import Grid from '@material-ui/core/Grid';
+import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchRounded from '@material-ui/icons/SearchRounded';
@@ -11,6 +12,15 @@ import Skeleton from '@material-ui/lab/Skeleton';
 
 // Styled components
 const SearchBarForm = styled.form`
+  display: flex;
+  flex-grow: 1;
+  margin-right: 10px;
+`;
+
+const SearchSortContainer = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   margin: 10px 0px;
 `;
 
@@ -43,17 +53,34 @@ const ToolImage = styled.img`
   z-index: 3;
 `;
 
+// Filter options
+const FILTER_OPTIONS = {
+  ASCENDING: 'asc',
+  DESCENDING: 'des',
+};
+
 const FilterAndViewComponent = ({ data }) => {
   const [filteredData, setFilteredData] = useState(data);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filter, setFilter] = useState('');
   const history = useHistory();
 
   useEffect(() => {
     filterData();
-  }, [data, searchTerm]);
+  }, [data, searchTerm, filter]);
+
+  const sortData = (d) => {
+    d.sort((a, b) => {
+      if (filter === FILTER_OPTIONS.ASCENDING) {
+        return a.avgRetrievalTime - b.avgRetrievalTime;
+      } else if (filter === FILTER_OPTIONS.DESCENDING) {
+        return b.avgRetrievalTime - a.avgRetrievalTime;
+      }
+    });
+  };
 
   const filterData = () => {
-    const newData = [];
+    let newData = [];
     data.forEach((d) => {
       for (let i = 0; i < d.keywords.length; i++) {
         const word = d.keywords[i].toLowerCase();
@@ -63,6 +90,9 @@ const FilterAndViewComponent = ({ data }) => {
         }
       }
     });
+    if (filter !== '') {
+      sortData(newData);
+    }
     setFilteredData(newData);
   };
 
@@ -80,27 +110,43 @@ const FilterAndViewComponent = ({ data }) => {
 
   return (
     <React.Fragment>
-      <SearchBarForm noValidate>
+      <SearchSortContainer>
+        <SearchBarForm noValidate>
+          <TextField
+            onChange={handleFilterChange}
+            value={searchTerm}
+            placeholder='Type to search...'
+            type='search'
+            autoCorrect='off'
+            autoCapitalize='off'
+            autoComplete='off'
+            spellCheck='false'
+            id='search'
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <SearchRounded />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </SearchBarForm>
         <TextField
-          onChange={handleFilterChange}
-          value={searchTerm}
-          placeholder='Type to search...'
-          type='search'
-          autoCorrect='off'
-          autoCapitalize='off'
-          autoComplete='off'
-          spellCheck='false'
-          id='search'
-          fullWidth
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position='start'>
-                <SearchRounded />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </SearchBarForm>
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          style={{ minWidth: 70 }}
+          label='Sort'
+          select
+        >
+          <MenuItem value={FILTER_OPTIONS.DESCENDING}>
+            Retrieval Time (Hi - Lo)
+          </MenuItem>
+          <MenuItem value={FILTER_OPTIONS.ASCENDING}>
+            Retrieval Time (Lo - Hi)
+          </MenuItem>
+        </TextField>
+      </SearchSortContainer>
 
       <Grid container alignContent='stretch' spacing={3}>
         {data.length > 0

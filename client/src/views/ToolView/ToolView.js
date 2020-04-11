@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import numeral from 'numeral';
 
 // Custom components
 import { AuthContext } from '../../Auth';
@@ -55,8 +56,12 @@ const KeywordContainer = styled.div`
 
 const BackButtonContainer = styled.div`
   position: fixed;
-  top: 40px;
-  left: 40px;
+  top: 20px;
+  left: 20px;
+  @media only screen and (min-width: 768px) {
+    top: 40px;
+    left: 40px;
+  }
 `;
 
 const ToolView = ({ toolData }) => {
@@ -157,6 +162,19 @@ const ToolView = ({ toolData }) => {
     }
   };
 
+  const renderAvgRetrievalTime = () => {
+    if (tool === null) {
+      return <Skeleton variant='text' width='100%' height={40} />;
+    } else {
+      return (
+        <Typography>
+          Avg. Retrieval Time: {numeral(tool.avgRetrievalTime).format('0.00')}{' '}
+          (s)
+        </Typography>
+      );
+    }
+  };
+
   return (
     <RootContainer>
       <BackButtonContainer>
@@ -176,6 +194,7 @@ const ToolView = ({ toolData }) => {
           {renderKeywords()}
           <RetrievalComponent addRetrieval={addRetrieval} />
           {renderChart()}
+          {authContext.authenticated && renderAvgRetrievalTime()}
           {authContext.authenticated && (
             <Divider style={{ padding: '20px 0px' }} />
           )}

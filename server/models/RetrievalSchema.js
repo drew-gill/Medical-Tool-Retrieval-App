@@ -6,10 +6,8 @@ const mongoose = require('mongoose');
      See also https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications
 */
 const retrievalSchema = new mongoose.Schema({
-  retrievalTime: {type: mongoose.Number, required: true},
-  retrievalDate: {type: Date, required: true, default: Date.now},
-}); 
-  
+  retrievalTime: { type: mongoose.Number, required: true },
+  retrievalDate: { type: Date, required: true, default: Date.now },
+});
 
 module.exports = retrievalSchema;
-  

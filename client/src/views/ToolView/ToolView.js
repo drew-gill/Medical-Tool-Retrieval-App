@@ -56,8 +56,12 @@ const KeywordContainer = styled.div`
 
 const BackButtonContainer = styled.div`
   position: fixed;
-  top: 40px;
-  left: 40px;
+  top: 20px;
+  left: 20px;
+  @media only screen and (min-width: 768px) {
+    top: 40px;
+    left: 40px;
+  }
 `;
 
 const ToolView = ({ toolData }) => {

@@ -20,7 +20,7 @@ ToolSchema.pre('save', function (next) {
   let total = 0.0;
   const numberOfEntries = Math.min(tool.retrievalHistory.length, 30);
   for (let i = 0; i < numberOfEntries; i++) {
-    total += retrievalHistory[i].retrievalTime;
+    total += tool.retrievalHistory[i].retrievalTime;
   }
   // Save the average retrieval time
   tool.avgRetrievalTime = total / tool.retrievalHistory.length;

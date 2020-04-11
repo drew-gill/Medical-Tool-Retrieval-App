@@ -1,14 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import numeral from 'numeral';
 
 // Material UI
 import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
+import CardActionArea from '@material-ui/core/CardActionArea';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchRounded from '@material-ui/icons/SearchRounded';
 import Skeleton from '@material-ui/lab/Skeleton';
+import Typography from '@material-ui/core/Typography';
+
+import { AuthContext } from '../Auth';
 
 // Styled components
 const SearchBarForm = styled.form`
@@ -24,35 +32,6 @@ const SearchSortContainer = styled.div`
   margin: 10px 0px;
 `;
 
-const GridItemContainer = styled.div`
-  width: 100%;
-  height: 300px;
-  &:hover {
-    cursor: pointer;
-  }
-  position: relative;
-`;
-
-const GridItemHover = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(255, 255, 255, 0.1);
-  opacity: 0;
-  &:hover {
-    opacity: 1;
-  }
-`;
-
-const ToolImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 3;
-`;
-
 // Filter options
 const FILTER_OPTIONS = {
   ASCENDING: 'asc',
@@ -60,6 +39,7 @@ const FILTER_OPTIONS = {
 };
 
 const FilterAndViewComponent = ({ data }) => {
+  const authContext = useContext(AuthContext);
   const [filteredData, setFilteredData] = useState(data);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('');
@@ -103,7 +83,7 @@ const FilterAndViewComponent = ({ data }) => {
   const generateSkeletons = () => {
     const skeletons = [];
     for (let i = 0; i < 20; i++) {
-      skeletons.push(<Skeleton variant='rect' width='100%' height='100%' />);
+      skeletons.push(<Skeleton variant='rect' width='100%' height={300} />);
     }
     return skeletons;
   };
@@ -152,20 +132,47 @@ const FilterAndViewComponent = ({ data }) => {
         {data.length > 0
           ? filteredData.map((d, index) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={d._id}>
-                <GridItemContainer onClick={() => handleSelect(d)}>
+                <Card variant='outlined' elevation={0}>
+                  <CardActionArea onClick={() => handleSelect(d)}>
+                    <CardMedia
+                      image={`data:image/jpg;base64, ${d.image.toString(
+                        'base64'
+                      )}`}
+                      style={{ height: 300 }}
+                    />
+                    {authContext.authenticated && (
+                      <CardContent>
+                        <Typography>
+                          Avg. Retrieval Time:{' '}
+                          {numeral(d.avgRetrievalTime).format('0.00')} (s)
+                        </Typography>
+                      </CardContent>
+                    )}
+                  </CardActionArea>
+                </Card>
+                {/* <GridItemContainer onClick={() => handleSelect(d)}>
                   <GridItemHover />
                   <ToolImage
                     src={`data:image/jpg;base64, ${d.image.toString('base64')}`}
                   />
-                </GridItemContainer>
+                  <Typography>
+                    {numeral(d.avgRetrievalTime).format('0.00')} seconds
+                  </Typography>
+                </GridItemContainer> */}
               </Grid>
             ))
           : generateSkeletons().map((skel, index) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                <GridItemContainer>
-                  <GridItemHover />
-                  {skel}
-                </GridItemContainer>
+                <Card variant='outlined' elevation={0}>
+                  <CardActionArea>
+                    {skel}
+                    {authContext.authenticated && (
+                      <CardContent>
+                        <Skeleton variant='text' width='100%' height={50} />
+                      </CardContent>
+                    )}
+                  </CardActionArea>
+                </Card>
               </Grid>
             ))}
       </Grid>

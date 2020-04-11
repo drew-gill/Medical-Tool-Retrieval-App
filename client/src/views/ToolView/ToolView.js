@@ -165,7 +165,7 @@ const ToolView = ({ toolData }) => {
       return (
         <Typography>
           Avg. Retrieval Time: {numeral(tool.avgRetrievalTime).format('0.00')}{' '}
-          seconds
+          (s)
         </Typography>
       );
     }
@@ -190,7 +190,7 @@ const ToolView = ({ toolData }) => {
           {renderKeywords()}
           <RetrievalComponent addRetrieval={addRetrieval} />
           {renderChart()}
-          {renderAvgRetrievalTime()}
+          {authContext.authenticated && renderAvgRetrievalTime()}
           {authContext.authenticated && (
             <Divider style={{ padding: '20px 0px' }} />
           )}

@@ -24,7 +24,6 @@ ToolSchema.pre('save', function (next) {
   }
   // Save the average retrieval time
   tool.avgRetrievalTime = total / tool.retrievalHistory.length;
-  console.log(tool);
   next();
 });
 let Tool = mongoose.model('tools', ToolSchema);

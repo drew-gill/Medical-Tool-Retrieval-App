@@ -3,42 +3,51 @@ const User = require('../models/UserModel.js');
 exports.getUser = async (req, res) => {
   if (req.query.id !== undefined) {
     // Return a specific user
-    User.findById(req.query.id).then((user) => {
-      res.send(user);
-    });
+    const user = await User.findById(req.query.id);
+    if (user) {
+      res.status(200).send(user);
+    }
   } else {
     // Return a list of all users
-    User.find().then((users) => {
-      res.send(users);
-    });
+    const users = await User.find();
+    if (users) {
+      res.status(200).send(users);
+    }
   }
 };
 
 exports.create = async (req, res) => {
-  user = new User({ username: req.body.username, password: req.body.password });
-  user.save().then((data) => {
-    res.send(data);
+  const user = new User({
+    username: req.body.username,
+    password: req.body.password,
   });
+  const data = await user.save();
+  if (data) {
+    res.status(200).send(data);
+  }
 };
 
-exports.updateUser = (req, res) => {
-  User.findOne({ username: req.body.username }).then((user) => {
-    if (user) {
-      if (req.body.newUsername) {
-        user.username = req.body.newUsername;
-      }
-      if (req.body.newPassword) {
-        user.password = req.body.newPassword;
-      }
-    } else {
-      res
-        .status(404)
-        .send({ message: 'An unexpected error occurred. Please try again.' });
+exports.updateUser = async (req, res) => {
+  const user = await User.findById(req.query.id);
+  if (user) {
+    if (req.body.username) {
+      user.username = req.body.username;
     }
-    user.save().then((data) => {
-      res.send(data);
-    });
-  });
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+    if (req.body.master) {
+      // Remove master from other user
+      const masterUser = await User.findById(masterId);
+      if (masterUser) {
+        masterUser.master = false;
+        user.master = true;
+        await masterUser.save();
+      }
+    }
+    const data = await user.save();
+    res.status(200).send(data);
+  }
 };
 
 //if user != null, then they were successfully authenticated. return status 200
@@ -72,7 +81,7 @@ exports.authenticate = (req, res) => {
 };
 
 exports.remove = (req, res) => {
-  User.findOneAndRemove({ username: req.body.username }).exec((err) => {
+  User.findByIdAndRemove(req.query.id).exec((err) => {
     if (err) {
       return res.status(404).send({ message: "Couldn't find user!" });
     }

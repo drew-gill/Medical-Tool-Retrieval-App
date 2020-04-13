@@ -11,7 +11,7 @@ const LOCK_TIME = 60 * 1000; //1 minute in milliseconds. Subject to change
 const UserSchema = new Schema({
   username: { type: String, required: true, index: { unique: true } },
   password: { type: String, required: true },
-
+  master: { type: Boolean, required: true, default: false },
   loginAttempts: { type: Number, required: true, default: 0 }, //how many consecutive failures to login
   lockUntil: { type: Date }, //a timestamp indicating when we can can stop ignoring login attempts (after many failures)
 });

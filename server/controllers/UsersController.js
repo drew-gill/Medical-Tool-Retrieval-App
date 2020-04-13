@@ -3,6 +3,7 @@ const User = require('../models/UserModel.js');
 exports.getUser = async (req, res) => {
   if (req.query.id !== undefined) {
     // Return a specific user
+    console.log(req.query.id);
     const user = await User.findById(req.query.id);
     if (user) {
       res.status(200).send(user);

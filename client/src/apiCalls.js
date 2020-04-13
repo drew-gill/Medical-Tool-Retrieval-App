@@ -27,7 +27,7 @@ const readAllTools = async () => {
   return data || [];
 };
 
-const deleteTool = async id => {
+const deleteTool = async (id) => {
   await axios.delete(`${getUrl()}?id=${id}`);
 };
 
@@ -53,7 +53,7 @@ const updateTool = async (image, keywords, id) => {
   return tool;
 };
 
-const readTool = async id => {
+const readTool = async (id) => {
   const res = await axios.get(`${getUrl()}?id=${id}`);
   return res.data;
 };
@@ -114,31 +114,44 @@ const createUser = async (username, password) => {
 };
 
 const updateUser = async (
-  currUsername,
-  newUsername = undefined,
-  newPassword = undefined
+  id,
+  username = undefined,
+  password = undefined,
+  master = undefined,
+  masterId = undefined
 ) => {
   const payload = {
-    username: currUsername,
-    newUsername: newUsername,
-    newPassword: newPassword
+    username,
+    password,
+    master,
+    masterId,
   };
 
   try {
-    await axios.put(getUrlUser(), payload);
+    await axios.put(`${getUrlUser()}?id=${id}`, payload);
   } catch (error) {
     throw new Error(error.response.data.message);
   }
 };
 
-const VerifyLogin = async (username, password) => {
-  const data = {
-    username: username,
-    password: password
+const getUser = async (id) => {
+  try {
+    const { data } = await axios.get(`${getUrlUser()}?id=${id}`);
+    return data;
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+const verifyLogin = async (username, password) => {
+  const payload = {
+    username,
+    password,
   };
 
   try {
-    await axios.post(getUrlUser(), data);
+    const { data } = await axios.post(getUrlUser(), payload);
+    return data;
   } catch (error) {
     throw new Error(error.response.data.message);
   }
@@ -153,6 +166,7 @@ export {
   addToolRetrieval,
   updateToolRetrieval,
   removeToolRetrieval,
-  VerifyLogin,
-  updateUser
+  verifyLogin,
+  updateUser,
+  getUser,
 };

@@ -3,28 +3,45 @@ const User = require('../models/UserModel.js');
 exports.getUser = async (req, res) => {
   if (req.query.id !== undefined) {
     // Return a specific user
-    console.log(req.query.id);
-    const user = await User.findById(req.query.id);
-    if (user) {
-      res.status(200).send(user);
+    try {
+      const user = await User.findById(req.query.id);
+      if (user) {
+        res.status(200).send(user);
+      } else {
+        res.status(404).send({
+          message: 'Failed to find the account associated with this user.',
+        });
+      }
+    } catch (error) {
+      res.status(500).send({ message: 'An unexpected error occurred.' });
     }
   } else {
     // Return a list of all users
-    const users = await User.find();
-    if (users) {
+    try {
+      const users = await User.find();
       res.status(200).send(users);
+    } catch (error) {
+      res.status(500).send({ message: 'An unexpected error occurred.' });
     }
   }
 };
 
 exports.create = async (req, res) => {
-  const user = new User({
-    username: req.body.username,
-    password: req.body.password,
-  });
-  const data = await user.save();
-  if (data) {
+  try {
+    const user = new User({
+      username: req.body.username,
+      password: req.body.password,
+    });
+    const data = await user.save();
     res.status(200).send(data);
+  } catch (error) {
+    if (error.code === 11000) {
+      res
+        .status(403)
+        .send({ message: 'A user with this username already exists.' });
+    } else {
+      res.status(500).send({ message: 'An unexpected error occurred.' });
+    }
   }
 };
 
@@ -37,17 +54,22 @@ exports.updateUser = async (req, res) => {
     if (req.body.password) {
       user.password = req.body.password;
     }
-    if (req.body.master) {
-      // Remove master from other user
-      const masterUser = await User.findById(masterId);
-      if (masterUser) {
-        masterUser.master = false;
-        user.master = true;
-        await masterUser.save();
+    try {
+      const data = await user.save();
+      res.status(200).send(data);
+    } catch (error) {
+      if (error.code === 11000) {
+        res
+          .status(403)
+          .send({ message: 'A user with this username already exists.' });
+      } else {
+        res.status(500).send({ message: 'An unexpected error occurred.' });
       }
     }
-    const data = await user.save();
-    res.status(200).send(data);
+  } else {
+    res.status(404).send({
+      message: 'Failed to find the account associated with this user.',
+    });
   }
 };
 
@@ -84,8 +106,10 @@ exports.authenticate = (req, res) => {
 exports.remove = (req, res) => {
   User.findByIdAndRemove(req.query.id).exec((err) => {
     if (err) {
-      return res.status(404).send({ message: "Couldn't find user!" });
+      return res.status(404).send({
+        message: 'Failed to find the account associated with this user.',
+      });
     }
   });
-  return res.status(200).send({ message: 'successful' });
+  return res.status(200).send({ message: 'Success.' });
 };

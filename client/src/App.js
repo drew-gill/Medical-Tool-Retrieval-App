@@ -47,7 +47,7 @@ const App = () => {
     if (isMaster === undefined) {
       return <LoadingView />;
     }
-    if (authenticated && isMaster) {
+    if (authenticated) {
       return <AccountView />;
     } else {
       return <Redirect to='/' />;
@@ -77,23 +77,25 @@ const App = () => {
         isMaster,
       }}
     >
-      <Switch>
-        <Route exact path='/Home' component={Home} />
-        <Route exact path='/ToolView/:id' component={ToolView} />
-        <Route exact path='/Users'>
-          {renderUsersView()}
-        </Route>
-        <Route exact path='/Account'>
-          {renderAccountView()}
-        </Route>
-        <Route exact path='/Login'>
-          {authenticated ? <Redirect to='/Home' /> : <Login />}
-        </Route>
-        <Route exact path='/'>
-          {authenticated ? <Redirect to='/Home' /> : <Redirect to='/Login' />}
-        </Route>
-        <Route component={NotFound} />
-      </Switch>
+      <div style={{ margin: '0px 20px' }}>
+        <Switch>
+          <Route exact path='/Home' component={Home} />
+          <Route exact path='/ToolView/:id' component={ToolView} />
+          <Route exact path='/Users'>
+            {renderUsersView()}
+          </Route>
+          <Route exact path='/Account'>
+            {renderAccountView()}
+          </Route>
+          <Route exact path='/Login'>
+            {authenticated ? <Redirect to='/Home' /> : <Login />}
+          </Route>
+          <Route exact path='/'>
+            {authenticated ? <Redirect to='/Home' /> : <Redirect to='/Login' />}
+          </Route>
+          <Route component={NotFound} />
+        </Switch>
+      </div>
     </AuthContext.Provider>
   );
 };

@@ -31,11 +31,9 @@ const AccountMenu = ({ logout }) => {
       </IconButton>
       <Menu anchorEl={anchor} open={Boolean(anchor)} onClose={handleClose}>
         {authContext.isMaster && (
-          <React.Fragment>
-            <MenuItem onClick={handleUsers}>Users</MenuItem>
-            <MenuItem onClick={handleAccount}>Account</MenuItem>
-          </React.Fragment>
+          <MenuItem onClick={handleUsers}>Users</MenuItem>
         )}
+        <MenuItem onClick={handleAccount}>Account</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </React.Fragment>

@@ -1,5 +1,12 @@
 import { createContext } from 'react';
-import { verifyLogin, updateUser, getUser } from './apiCalls';
+import {
+  verifyLogin,
+  updateUser,
+  getUser,
+  getAllUsers,
+  createUser,
+  deleteUser,
+} from './apiCalls';
 
 // Settings
 const TOKEN_KEY = 'authToken';
@@ -51,20 +58,34 @@ class Auth {
   };
 
   static updateCredentials = async (
-    id = undefined,
     username = undefined,
-    password = undefined,
-    isMaster = undefined
+    password = undefined
   ) => {
     try {
-      if (id) {
-        await updateUser(id, username, password, isMaster, this.getUserId());
-      } else {
-        await updateUser(this.getUserId(), username, password);
-      }
+      await updateUser(this.getUserId(), username, password);
     } catch (error) {
       throw new Error(error.message);
     }
+  };
+
+  static getUsers = async () => {
+    const users = await getAllUsers();
+    const pUsers = [];
+    users.forEach((u) => {
+      if (u._id !== this.getUserId()) {
+        pUsers.push(u);
+      }
+    });
+    return pUsers;
+  };
+
+  static createUser = async (username, password) => {
+    const newUser = await createUser(username, password);
+    return newUser;
+  };
+
+  static deleteUser = async (id) => {
+    await deleteUser(id);
   };
 }
 

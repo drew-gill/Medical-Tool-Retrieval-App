@@ -36,12 +36,8 @@ const ViewContainer = styled.div`
 
 const BackButtonContainer = styled.div`
   position: fixed;
-  top: 20px;
-  left: 20px;
-  @media only screen and (min-width: 768px) {
-    top: 40px;
-    left: 40px;
-  }
+  top: 40px;
+  left: 40px;
 `;
 
 // Styles
@@ -122,7 +118,7 @@ const ToolView = () => {
       // Update the user
       setSubmitting(true);
       try {
-        await authContext.updateCredentials(undefined, username, password);
+        await authContext.updateCredentials(username, password);
       } catch (error) {
         setErrors({
           username: error.message,
@@ -138,7 +134,7 @@ const ToolView = () => {
     return <LoadingView />;
   }
 
-  if (!authContext.authenticated || !authContext.isMaster) {
+  if (!authContext.authenticated) {
     history.replace('/Login');
   }
 

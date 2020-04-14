@@ -1,10 +1,18 @@
 import { createContext } from 'react';
-import { VerifyLogin, updateUser } from './apiCalls';
+import {
+  verifyLogin,
+  updateUser,
+  getUser,
+  getAllUsers,
+  createUser,
+  deleteUser,
+} from './apiCalls';
 
 // Settings
 const TOKEN_KEY = 'authToken';
 const EXPIRATION_TIME = 24; // How long a user can remain logged-in for, in hours.
 const EXP_TIME = EXPIRATION_TIME * 60 * 60 * 1000; // EXPIRATION_TIME in milliseconds.
+const USER_ID_KEY = 'userId';
 
 const generateExpirationTime = () => new Date().getTime() + EXP_TIME;
 
@@ -15,34 +23,80 @@ class Auth {
     return new Date().getTime() < authToken;
   };
 
-  static getUsername = () => JSON.parse(localStorage.getItem('username'));
+  static isMaster = async () => {
+    const user = await this.getUser();
+    return user.master;
+  };
+
+  static getUserId = () => JSON.parse(localStorage.getItem(USER_ID_KEY));
+
+  static getUser = async (id = undefined) => {
+    try {
+      if (id) {
+        const user = await getUser(id);
+        return user;
+      } else {
+        const user = await getUser(
+          JSON.parse(localStorage.getItem(USER_ID_KEY))
+        );
+        return user;
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
 
   static login = async (username, password) => {
     try {
-      await VerifyLogin(username, password); // Attempt to log the user in
+      const user = await verifyLogin(username, password);
       // Set a new authToken
       const expTime = JSON.stringify(generateExpirationTime());
       localStorage.setItem(TOKEN_KEY, expTime);
-      localStorage.setItem('username', JSON.stringify(username));
+      localStorage.setItem(USER_ID_KEY, JSON.stringify(user._id));
     } catch (error) {
       throw new Error(error.message);
     }
   };
 
   static logout = () => {
-    localStorage.removeItem('username');
+    localStorage.removeItem(USER_ID_KEY);
     localStorage.removeItem(TOKEN_KEY);
   };
 
   static updateCredentials = async (
-    newUsername = undefined,
-    newPassword = undefined
+    username = undefined,
+    password = undefined
   ) => {
     try {
-      await updateUser(this.getUsername(), newUsername, newPassword);
-      if (newUsername) {
-        localStorage.setItem('username', JSON.stringify(newUsername));
+      await updateUser(this.getUserId(), username, password);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  static getUsers = async () => {
+    const users = await getAllUsers();
+    const pUsers = [];
+    users.forEach((u) => {
+      if (u._id !== this.getUserId()) {
+        pUsers.push(u);
       }
+    });
+    return pUsers;
+  };
+
+  static createUser = async (username, password) => {
+    try {
+      const newUser = await createUser(username, password);
+      return newUser;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  static deleteUser = async (id) => {
+    try {
+      await deleteUser(id);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -50,12 +104,13 @@ class Auth {
 }
 
 const AuthContext = createContext({
+  isMaster: false,
   authenticated: false,
   refreshAuth: () => {},
   login: (username, password) => {},
   logout: () => {},
-  getUsername: () => {},
-  updateCredentials: (newUsername, newPassword) => {}
+  getUser: (id = undefined) => {},
+  updateCredentials: async (username = undefined, password = undefined) => {},
 });
 
 export default Auth;

@@ -15,6 +15,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchRounded from '@material-ui/icons/SearchRounded';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Typography from '@material-ui/core/Typography';
+import Pagination from '@material-ui/lab/Pagination';
 
 import { AuthContext } from '../Auth';
 
@@ -32,6 +33,14 @@ const SearchSortContainer = styled.div`
   margin: 10px 0px;
 `;
 
+const PaginationContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0px;
+`;
+
 // Filter options
 const FILTER_OPTIONS = {
   ASCENDING: 'asc',
@@ -40,14 +49,38 @@ const FILTER_OPTIONS = {
 
 const FilterAndViewComponent = ({ data }) => {
   const authContext = useContext(AuthContext);
+  const [page, setPage] = useState(1);
   const [filteredData, setFilteredData] = useState(data);
+  const [paginatedData, setPaginatedData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('');
   const history = useHistory();
 
   useEffect(() => {
+    const newPaginated = [];
+    let count = 0;
+    let row = [];
+    filteredData.forEach((d) => {
+      row.push(d);
+      count += 1;
+      if (count === 50) {
+        newPaginated.push(row);
+        row = [];
+        count = 0;
+      }
+    });
+    if (row.length > 0) {
+      newPaginated.push(row);
+    }
+    setPaginatedData(newPaginated);
+  }, [filteredData]);
+
+  useEffect(() => {
     filterData();
+    setPage(1);
   }, [data, searchTerm, filter]);
+
+  const handlePageChange = (event, value) => setPage(value);
 
   const sortData = (d) => {
     d.sort((a, b) => {
@@ -59,15 +92,38 @@ const FilterAndViewComponent = ({ data }) => {
     });
   };
 
+  const containsTerm = (keywords, term) => {
+    for (let i = 0; i < keywords.length; i++) {
+      const word = keywords[i].toLowerCase();
+      if (word.search(term.toLowerCase()) !== -1) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const filterData = () => {
     let newData = [];
+    let found = {};
+    const searchTerms = searchTerm.trim().split(' ');
     data.forEach((d) => {
-      for (let i = 0; i < d.keywords.length; i++) {
-        const word = d.keywords[i].toLowerCase();
-        if (word.search(searchTerm.toLowerCase()) !== -1) {
-          newData.push(d);
-          break;
+      searchTerms.forEach((st) => {
+        if (containsTerm(d.keywords, st)) {
+          if (found[d._id] === undefined) {
+            found[d._id] = {
+              data: d,
+              count: 1,
+            };
+          } else {
+            found[d._id].count += 1;
+          }
         }
+      });
+    });
+    const keys = Object.keys(found);
+    keys.forEach((key) => {
+      if (found[key].count === searchTerms.length) {
+        newData.push(found[key].data);
       }
     });
     if (filter !== '') {
@@ -76,7 +132,9 @@ const FilterAndViewComponent = ({ data }) => {
     setFilteredData(newData);
   };
 
-  const handleFilterChange = (e) => setSearchTerm(e.target.value);
+  const handleSearchTermChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
 
   const handleSelect = (item) => history.push(`/ToolView/${item._id}`);
 
@@ -88,12 +146,37 @@ const FilterAndViewComponent = ({ data }) => {
     return skeletons;
   };
 
+  const renderGridItem = () => {
+    if (paginatedData.length > 0) {
+      return paginatedData[page - 1].map((d) => (
+        <Grid item xs={12} sm={6} md={4} lg={3} key={d._id}>
+          <Card variant='outlined' elevation={0}>
+            <CardActionArea onClick={() => handleSelect(d)}>
+              <CardMedia
+                image={`data:image/jpg;base64, ${d.image.toString('base64')}`}
+                style={{ height: 300 }}
+              />
+              {authContext.authenticated && (
+                <CardContent>
+                  <Typography>
+                    Avg. Retrieval Time:{' '}
+                    {numeral(d.avgRetrievalTime).format('0.00')} (s)
+                  </Typography>
+                </CardContent>
+              )}
+            </CardActionArea>
+          </Card>
+        </Grid>
+      ));
+    }
+  };
+
   return (
     <React.Fragment>
       <SearchSortContainer>
         <SearchBarForm noValidate>
           <TextField
-            onChange={handleFilterChange}
+            onChange={handleSearchTermChange}
             value={searchTerm}
             placeholder='Type to search...'
             type='search'
@@ -130,39 +213,19 @@ const FilterAndViewComponent = ({ data }) => {
         )}
       </SearchSortContainer>
 
+      {paginatedData.length > 1 && (
+        <PaginationContainer>
+          <Pagination
+            count={paginatedData.length}
+            page={page}
+            onChange={handlePageChange}
+          />
+        </PaginationContainer>
+      )}
+
       <Grid container alignContent='stretch' spacing={3}>
         {data.length > 0
-          ? filteredData.map((d, index) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={d._id}>
-                <Card variant='outlined' elevation={0}>
-                  <CardActionArea onClick={() => handleSelect(d)}>
-                    <CardMedia
-                      image={`data:image/jpg;base64, ${d.image.toString(
-                        'base64'
-                      )}`}
-                      style={{ height: 300 }}
-                    />
-                    {authContext.authenticated && (
-                      <CardContent>
-                        <Typography>
-                          Avg. Retrieval Time:{' '}
-                          {numeral(d.avgRetrievalTime).format('0.00')} (s)
-                        </Typography>
-                      </CardContent>
-                    )}
-                  </CardActionArea>
-                </Card>
-                {/* <GridItemContainer onClick={() => handleSelect(d)}>
-                  <GridItemHover />
-                  <ToolImage
-                    src={`data:image/jpg;base64, ${d.image.toString('base64')}`}
-                  />
-                  <Typography>
-                    {numeral(d.avgRetrievalTime).format('0.00')} seconds
-                  </Typography>
-                </GridItemContainer> */}
-              </Grid>
-            ))
+          ? renderGridItem()
           : generateSkeletons().map((skel, index) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                 <Card variant='outlined' elevation={0}>
@@ -178,6 +241,16 @@ const FilterAndViewComponent = ({ data }) => {
               </Grid>
             ))}
       </Grid>
+
+      {paginatedData.length > 1 && (
+        <PaginationContainer style={{ marginBottom: 0 }}>
+          <Pagination
+            count={paginatedData.length}
+            page={page}
+            onChange={handlePageChange}
+          />
+        </PaginationContainer>
+      )}
     </React.Fragment>
   );
 };

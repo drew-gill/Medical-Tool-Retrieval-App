@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 // Custom components
 import { AuthContext } from '../../Auth';
+import LoadingView from '../../components/LoadingView';
 
 // Material UI
 import { makeStyles } from '@material-ui/core/styles';
@@ -52,6 +53,7 @@ const ToolView = () => {
   const classes = useStyles();
   const authContext = useContext(AuthContext);
   const history = useHistory();
+  const [currUser, setCurrUser] = useState(undefined);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -62,9 +64,14 @@ const ToolView = () => {
   });
   const [submitting, setSubmitting] = useState(false);
 
+  const loadInformation = async () => {
+    const user = await authContext.getUser();
+    setCurrUser(user);
+    setUsername(user.username);
+  };
+
   useEffect(() => {
-    authContext.refreshAuth();
-    setUsername(authContext.getUsername());
+    loadInformation();
   }, []);
 
   const goBack = () => history.goBack();
@@ -93,7 +100,6 @@ const ToolView = () => {
       _errors['confirmPassword'] = 'Passwords must match.';
     }
     setErrors(_errors);
-    console.log(_errors);
     if (
       _errors['username'] !== '' ||
       _errors['password'] !== '' ||
@@ -122,6 +128,10 @@ const ToolView = () => {
       setConfirmPassword('');
     }
   };
+
+  if (currUser === undefined) {
+    return <LoadingView />;
+  }
 
   if (!authContext.authenticated) {
     history.replace('/Login');

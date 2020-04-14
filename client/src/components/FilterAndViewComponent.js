@@ -59,15 +59,38 @@ const FilterAndViewComponent = ({ data }) => {
     });
   };
 
+  const containsTerm = (keywords, term) => {
+    for (let i = 0; i < keywords.length; i++) {
+      const word = keywords[i].toLowerCase();
+      if (word.search(term.toLowerCase()) !== -1) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const filterData = () => {
     let newData = [];
+    let found = {};
+    const searchTerms = searchTerm.trim().split(' ');
     data.forEach((d) => {
-      for (let i = 0; i < d.keywords.length; i++) {
-        const word = d.keywords[i].toLowerCase();
-        if (word.search(searchTerm.toLowerCase()) !== -1) {
-          newData.push(d);
-          break;
+      searchTerms.forEach((st) => {
+        if (containsTerm(d.keywords, st)) {
+          if (found[d._id] === undefined) {
+            found[d._id] = {
+              data: d,
+              count: 1,
+            };
+          } else {
+            found[d._id].count += 1;
+          }
         }
+      });
+    });
+    const keys = Object.keys(found);
+    keys.forEach((key) => {
+      if (found[key].count === searchTerms.length) {
+        newData.push(found[key].data);
       }
     });
     if (filter !== '') {
@@ -76,7 +99,9 @@ const FilterAndViewComponent = ({ data }) => {
     setFilteredData(newData);
   };
 
-  const handleFilterChange = (e) => setSearchTerm(e.target.value);
+  const handleSearchTermChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
 
   const handleSelect = (item) => history.push(`/ToolView/${item._id}`);
 
@@ -93,7 +118,7 @@ const FilterAndViewComponent = ({ data }) => {
       <SearchSortContainer>
         <SearchBarForm noValidate>
           <TextField
-            onChange={handleFilterChange}
+            onChange={handleSearchTermChange}
             value={searchTerm}
             placeholder='Type to search...'
             type='search'

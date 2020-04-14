@@ -12,7 +12,12 @@ const UserRow = ({ user, deleteUser }) => {
 
   const handleDelete = async () => {
     setLoading(true);
-    await deleteUser(user);
+    try {
+      await deleteUser(user);
+    } catch (error) {
+      console.log(error.message);
+      setLoading(false);
+    }
   };
 
   return (

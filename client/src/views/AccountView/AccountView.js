@@ -100,7 +100,6 @@ const ToolView = () => {
       _errors['confirmPassword'] = 'Passwords must match.';
     }
     setErrors(_errors);
-    console.log(_errors);
     if (
       _errors['username'] !== '' ||
       _errors['password'] !== '' ||

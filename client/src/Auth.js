@@ -31,12 +31,18 @@ class Auth {
   static getUserId = () => JSON.parse(localStorage.getItem(USER_ID_KEY));
 
   static getUser = async (id = undefined) => {
-    if (id) {
-      const user = await getUser(id);
-      return user;
-    } else {
-      const user = await getUser(JSON.parse(localStorage.getItem(USER_ID_KEY)));
-      return user;
+    try {
+      if (id) {
+        const user = await getUser(id);
+        return user;
+      } else {
+        const user = await getUser(
+          JSON.parse(localStorage.getItem(USER_ID_KEY))
+        );
+        return user;
+      }
+    } catch (error) {
+      throw new Error(error.message);
     }
   };
 
@@ -80,12 +86,20 @@ class Auth {
   };
 
   static createUser = async (username, password) => {
-    const newUser = await createUser(username, password);
-    return newUser;
+    try {
+      const newUser = await createUser(username, password);
+      return newUser;
+    } catch (error) {
+      throw new Error(error.message);
+    }
   };
 
   static deleteUser = async (id) => {
-    await deleteUser(id);
+    try {
+      await deleteUser(id);
+    } catch (error) {
+      throw new Error(error.message);
+    }
   };
 }
 
@@ -96,12 +110,7 @@ const AuthContext = createContext({
   login: (username, password) => {},
   logout: () => {},
   getUser: (id = undefined) => {},
-  updateCredentials: (
-    id = undefined,
-    username = undefined,
-    password = undefined,
-    isMaster = undefined
-  ) => {},
+  updateCredentials: async (username = undefined, password = undefined) => {},
 });
 
 export default Auth;

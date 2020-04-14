@@ -111,14 +111,19 @@ const removeToolRetrieval = async (retrievalId, id) => {
 
 //this might work? not sure
 //I havent tested this functionality at all, this was a branch merged into mine from drews - willy
+// this now works - Zach
 const createUser = async (username, password) => {
   const payload = {
     username,
     password,
   };
-  const res = await axios.post(getUrlRegister(), payload);
-  const { data } = res;
-  return data;
+  try {
+    const res = await axios.post(getUrlRegister(), payload);
+    const { data } = res;
+    return data;
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
 };
 
 const updateUser = async (id, username = undefined, password = undefined) => {

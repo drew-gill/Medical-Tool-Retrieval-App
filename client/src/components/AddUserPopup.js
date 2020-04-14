@@ -10,12 +10,17 @@ import TextField from '@material-ui/core/TextField';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 // Styled components
 
 const AddUserPopup = ({ handleClose, open, action }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({
     username: '',
@@ -52,6 +57,9 @@ const AddUserPopup = ({ handleClose, open, action }) => {
   };
   const handlePassword = (e) => {
     setPassword(e.target.value);
+  };
+  const toggleShowPassword = () => {
+    setShowPassword((old) => !old);
   };
 
   const handleAction = async (e) => {
@@ -98,12 +106,24 @@ const AddUserPopup = ({ handleClose, open, action }) => {
             margin='dense'
             id='password'
             label='Password'
-            type='password'
+            type={showPassword ? 'text' : 'password'}
             fullWidth
             value={password}
             onChange={handlePassword}
             helperText={errors['password']}
             error={errors['password'] !== ''}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <IconButton
+                    aria-label='toggle password visibility'
+                    onClick={toggleShowPassword}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </DialogContent>
         <DialogActions>

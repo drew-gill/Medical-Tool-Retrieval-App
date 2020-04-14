@@ -15,6 +15,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchRounded from '@material-ui/icons/SearchRounded';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Typography from '@material-ui/core/Typography';
+import Pagination from '@material-ui/lab/Pagination';
 
 import { AuthContext } from '../Auth';
 
@@ -32,6 +33,14 @@ const SearchSortContainer = styled.div`
   margin: 10px 0px;
 `;
 
+const PaginationContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0px;
+`;
+
 // Filter options
 const FILTER_OPTIONS = {
   ASCENDING: 'asc',
@@ -40,14 +49,38 @@ const FILTER_OPTIONS = {
 
 const FilterAndViewComponent = ({ data }) => {
   const authContext = useContext(AuthContext);
+  const [page, setPage] = useState(1);
   const [filteredData, setFilteredData] = useState(data);
+  const [paginatedData, setPaginatedData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('');
   const history = useHistory();
 
   useEffect(() => {
+    const newPaginated = [];
+    let count = 0;
+    let row = [];
+    filteredData.forEach((d) => {
+      row.push(d);
+      count += 1;
+      if (count === 50) {
+        newPaginated.push(row);
+        row = [];
+        count = 0;
+      }
+    });
+    if (row.length > 0) {
+      newPaginated.push(row);
+    }
+    setPaginatedData(newPaginated);
+  }, [filteredData]);
+
+  useEffect(() => {
     filterData();
+    setPage(1);
   }, [data, searchTerm, filter]);
+
+  const handlePageChange = (event, value) => setPage(value);
 
   const sortData = (d) => {
     d.sort((a, b) => {
@@ -113,6 +146,31 @@ const FilterAndViewComponent = ({ data }) => {
     return skeletons;
   };
 
+  const renderGridItem = () => {
+    if (paginatedData.length > 0) {
+      return paginatedData[page - 1].map((d) => (
+        <Grid item xs={12} sm={6} md={4} lg={3} key={d._id}>
+          <Card variant='outlined' elevation={0}>
+            <CardActionArea onClick={() => handleSelect(d)}>
+              <CardMedia
+                image={`data:image/jpg;base64, ${d.image.toString('base64')}`}
+                style={{ height: 300 }}
+              />
+              {authContext.authenticated && (
+                <CardContent>
+                  <Typography>
+                    Avg. Retrieval Time:{' '}
+                    {numeral(d.avgRetrievalTime).format('0.00')} (s)
+                  </Typography>
+                </CardContent>
+              )}
+            </CardActionArea>
+          </Card>
+        </Grid>
+      ));
+    }
+  };
+
   return (
     <React.Fragment>
       <SearchSortContainer>
@@ -155,39 +213,19 @@ const FilterAndViewComponent = ({ data }) => {
         )}
       </SearchSortContainer>
 
+      {paginatedData.length > 1 && (
+        <PaginationContainer>
+          <Pagination
+            count={paginatedData.length}
+            page={page}
+            onChange={handlePageChange}
+          />
+        </PaginationContainer>
+      )}
+
       <Grid container alignContent='stretch' spacing={3}>
         {data.length > 0
-          ? filteredData.map((d, index) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={d._id}>
-                <Card variant='outlined' elevation={0}>
-                  <CardActionArea onClick={() => handleSelect(d)}>
-                    <CardMedia
-                      image={`data:image/jpg;base64, ${d.image.toString(
-                        'base64'
-                      )}`}
-                      style={{ height: 300 }}
-                    />
-                    {authContext.authenticated && (
-                      <CardContent>
-                        <Typography>
-                          Avg. Retrieval Time:{' '}
-                          {numeral(d.avgRetrievalTime).format('0.00')} (s)
-                        </Typography>
-                      </CardContent>
-                    )}
-                  </CardActionArea>
-                </Card>
-                {/* <GridItemContainer onClick={() => handleSelect(d)}>
-                  <GridItemHover />
-                  <ToolImage
-                    src={`data:image/jpg;base64, ${d.image.toString('base64')}`}
-                  />
-                  <Typography>
-                    {numeral(d.avgRetrievalTime).format('0.00')} seconds
-                  </Typography>
-                </GridItemContainer> */}
-              </Grid>
-            ))
+          ? renderGridItem()
           : generateSkeletons().map((skel, index) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                 <Card variant='outlined' elevation={0}>
@@ -203,6 +241,16 @@ const FilterAndViewComponent = ({ data }) => {
               </Grid>
             ))}
       </Grid>
+
+      {paginatedData.length > 1 && (
+        <PaginationContainer style={{ marginBottom: 0 }}>
+          <Pagination
+            count={paginatedData.length}
+            page={page}
+            onChange={handlePageChange}
+          />
+        </PaginationContainer>
+      )}
     </React.Fragment>
   );
 };

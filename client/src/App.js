@@ -6,6 +6,7 @@ import ToolView from './views/ToolView/ToolView';
 import AccountView from './views/AccountView/AccountView';
 import NotFound from './views/NotFound';
 import Login from './views/Login/Login';
+import UsersView from './views/UsersView/UsersView';
 import LoadingView from './components/LoadingView';
 
 const App = () => {
@@ -58,7 +59,7 @@ const App = () => {
       return <LoadingView />;
     }
     if (authenticated && isMaster) {
-      return <AccountView />;
+      return <UsersView />;
     } else {
       return <Redirect to='/' />;
     }

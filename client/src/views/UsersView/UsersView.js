@@ -49,7 +49,7 @@ const BackButtonContainer = styled.div`
 const UsersView = () => {
   const authContext = useContext(AuthContext);
   const history = useHistory();
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(undefined);
   const [popupOpen, setPopupOpen] = useState(false);
 
   const goBack = () => history.goBack();
@@ -83,6 +83,33 @@ const UsersView = () => {
     fetchUsers();
   }, []);
 
+  const renderTable = () => {
+    if (users.length > 0) {
+      return (
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Username</TableCell>
+                <TableCell>ID</TableCell>
+                <TableCell align='right'></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users.map((u) => (
+                <UserRow user={u} key={u._id} deleteUser={deleteUser} />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      );
+    } else {
+      return (
+        <Typography variant='body1'>No users other than master.</Typography>
+      );
+    }
+  };
+
   return (
     <RootContainer>
       <BackButtonContainer>
@@ -107,27 +134,10 @@ const UsersView = () => {
 
       <Container maxWidth='md'>
         <ViewContainer>
-          <Typography variant='h6'>Users</Typography>
-          {users.length > 0 ? (
-            <TableContainer style={{ marginTop: 20 }}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Username</TableCell>
-                    <TableCell>ID</TableCell>
-                    <TableCell align='right'></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {users.map((u) => (
-                    <UserRow user={u} key={u._id} deleteUser={deleteUser} />
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          ) : (
-            <CircularProgress />
-          )}
+          <Typography variant='h6' style={{ marginBottom: 20 }}>
+            Users
+          </Typography>
+          {users !== undefined ? renderTable() : <CircularProgress />}
         </ViewContainer>
       </Container>
     </RootContainer>

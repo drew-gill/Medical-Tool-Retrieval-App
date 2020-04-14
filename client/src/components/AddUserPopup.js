@@ -91,6 +91,7 @@ const AddUserPopup = ({ handleClose, open, action }) => {
             onChange={handleUsername}
             helperText={errors['username']}
             error={errors['username'] !== ''}
+            autoFocus
           />
           <TextField
             variant='filled'

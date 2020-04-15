@@ -1,74 +1,54 @@
-## _**PLEASE READ THIS TO COMPLETION BEFORE ASKING ANY QUESTIONS!**_
+# README.md
 
-### _**IMPORTANT NOTES**_ - 
-This project does not have a mongoDB connection setup. Setup the connection based on the environments below.
-- local development: create a config file (make sure to name it config.js) in the config folder, which exports your db.uri connection. An example is provided, config/config.example.js. This file will be ignored by git so your db credentials will be kept safe when the app is deployed.
-- production: Since the config file is not pushed when you deploy your app, you must specifiy your db uri in heorku. Set the uri in heroku as specified in [this](https://devcenter.heroku.com/articles/config-vars) resource. Make sure you name the environement variable "DB_URI".
+## Config File
+---
+For this MERN stack application, there will be two config files that will contain all the private information for the frontend and backend of the application.
 
-This project contains an example project board meant to showcase how one can be used. The issues posted to it are not real issues.
+On the backend side of the application, the path to the config file is CEN3031_FinalProject/server/config. In this config folder there will be the following javascript files:
+* express.js
+* config.js
 
-## Getting Started
-This repository aims to assist you in beginning work on a MERN stack application for heroku deployment with a solid file structure as a foundation. To get started make a copy of this template repo for your project teams by clicking the green "Use this template" button above.
+express.js will not require any changes to get the application started.
 
-Since this project will hold both the client application and the server application there will be node modules in two different places. First run `npm install` from the root. After this you will run `npm run-script install-all` from the root. From now on run this command anytime you want to install all modules again. This is a script we have defined in package.json. Alternatively your group may choose to simplify this process by using yarn workspaces as specified [here](https://yarnpkg.com/lang/en/docs/workspaces/).
+config.js will contain the MongoDB database uri that is hosting the backend of the application.
 
-This app can be deployed directly to heroku since there is a script defined in package.json which will automatically handle building and deploying the app. For more information on deploying to heroku reference the extra resources at the bottom of this file. 
+On the frontend side fo the application, the path to the config file is CEN3031_FinalProject/client/config. In this config foler there will be the following javascript file:
+* config.js
 
+config.js will contain the devURL and prodURL that will redirect the url for API requests if the project environment is being run in production mode or developement mode.
+## List of APIs with Keys
+---
+The three APIs and their respective information are listed below:
+1. CRUD
+   * Requires MongoDB uri in order to function properly
+2. Login Authentication
+   * Requires MongoDB uri in order to function properly
+3. Chart.js
+   * No key requried, just make sure to use `npm install` from the root folder
+4. Speech-to-Text
+   * Key information along with other important fields can be found within the service_key.json file
 
-## Available Scripts
+## Environmental Variables
+---
+The following environmental variables should be considered:
+* process.env.Node_ENV
+  * This could be in three possible states, developement, staging and production.
+  * Developement is for testing locally on your machine
+  * Production is for deploying on heroku
+  * Staging is unused and should not be used
+* process.env.DB_URI
+  * This contains the uri for the database
+* process.env.GCLOUD_PROJECT
+  * This sets the project as cen3031-final-project
+* process.env.GOOGLE_APPLICATION_CREDENTIALS
+    * This provides the path to the google api keys
+## Log-in credentials
+---
+In order to login with admin privledges, the following credentials must be entered into the username and password section on the login page.
+* Username: admin
+* Password: password
 
-Please note that any time the server is run in these scripts `nodemon` is used in place of `node` for easier development. If you are interested in how this works follow the nodemon In the project directory, you can run:
+**This account is the master account which can manage all other created accounts**
 
-### `npm run-script dev`
-
-Runs both the client app and the server app in development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view the client in the browser.
-
-### `npm run-script client`
-
-Runs just the client app in development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view the client in the browser.
-
-
-### `npm run-script server`
-
-Runs just the server in development mode.<br>
-
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-If deploying to heroku this does not need to be run since it is handled by the heroku-postbuild script<br>
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-
-## File structure
-#### `client` - Holds the client application
-- #### `public` - This holds all of our static files
-- #### `src`
-    - #### `assets` - This folder holds assets such as images, docs, and fonts
-    - #### `components` - This folder holds all of the different components that will make up our views
-    - #### `views` - These represent a unique page on the website i.e. Home or About. These are still normal react components
-    - #### `App.js` - This is what renders all of our browser routes and different views
-    - #### `index.js` - This is what renders the react app by rendering App.js, should not change
-- #### `package.json` - Defines npm behaviors and packages for the client
-#### `server` - Holds the server application
-- #### `config` - This holds our configuration files, like mongoDB uri
-- #### `controllers` - These hold all of the callback functions that each route will call
-- #### `models` - This holds all of our data models
-- #### `routes` - This holds all of our HTTP to URL path associations for each unique url
-- #### `tests` - This holds all of our server tests that we have defined
-- #### `server.js` - Defines npm behaviors and packages for the client
-#### `package.json` - Defines npm behaviors like the scripts defined in the next section of the README
-#### `.gitignore` - Tells git which files to ignore
-#### `README` - This file!
-
-## Learn More
-To learn how to setup a local MongoDB instance for testing, check out how to [connect to MongoDB](https://docs.mongodb.com/guides/server/drivers/).
-
-To learn how to deploy a full-stack web app to heroku, check out [this great guide](https://daveceddia.com/deploy-react-express-app-heroku/).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Project handoff guidelines + file/line replacement instructions for API keys
+---

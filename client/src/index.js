@@ -4,9 +4,11 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import ToolData, { ToolDataContext } from './components/ToolDataContext';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 ReactDOM.render(
   <ToolDataContext.Provider value={new ToolData()}>
+    <CssBaseline />
     <Router>
       <App />
     </Router>

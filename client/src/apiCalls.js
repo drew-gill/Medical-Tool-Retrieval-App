@@ -19,7 +19,15 @@ const getUrlUser = () => {
   } else {
     return devUrl + 'user/api/';
   }
-}
+};
+
+const getUrlRegister = () => {
+  if (process.env.NODE_ENV === 'production') {
+    return prodUrl + 'register/api/';
+  } else {
+    return devUrl + 'register/api/';
+  }
+};
 
 const readAllTools = async () => {
   const res = await axios.get(getUrl());
@@ -27,7 +35,7 @@ const readAllTools = async () => {
   return data || [];
 };
 
-const deleteTool = async id => {
+const deleteTool = async (id) => {
   await axios.delete(`${getUrl()}?id=${id}`);
 };
 
@@ -53,36 +61,34 @@ const updateTool = async (image, keywords, id) => {
   return tool;
 };
 
-const readTool = async id => {
+const readTool = async (id) => {
   const res = await axios.get(`${getUrl()}?id=${id}`);
   return res.data;
 };
 
-
-const addToolRetrieval = async (retrievalTime, retrievalDate, id) => {
-  let formData = new FormData();
-  if (retrievalTime) {
-    formData.append('retrievalTime', retrievalTime);
-  }
-  if(retrievalDate){
-    formData.append('retrievalDate', retrievalDate);
-  }
-  const res = await axios.post(`${getUrl()}?id=${id}/retrievals`, formData);
+const addToolRetrieval = async (retrievalTime, id) => {
+  const payload = { retrievalTime };
+  const res = await axios.post(`${getUrl()}retrievals/?id=${id}`, payload);
   const { data } = res;
   const tool = await readTool(data._id);
   return tool;
 };
 
-const updateToolRetrieval = async (retrievalId, retrievalTime, retrievalDate, id) => {
+const updateToolRetrieval = async (
+  retrievalId,
+  retrievalTime,
+  retrievalDate,
+  id
+) => {
   let formData = new FormData();
 
-  if(retrievalId){
+  if (retrievalId) {
     formData.append('retrievalId', retrievalId);
   }
   if (retrievalTime) {
     formData.append('retrievalTime', retrievalTime);
   }
-  if(retrievalDate){
+  if (retrievalDate) {
     formData.append('retrievalDate', retrievalDate);
   }
   const res = await axios.put(`${getUrl()}?id=${id}/retrievals`, formData);
@@ -94,7 +100,7 @@ const updateToolRetrieval = async (retrievalId, retrievalTime, retrievalDate, id
 const removeToolRetrieval = async (retrievalId, id) => {
   let formData = new FormData();
 
-  if(retrievalId){
+  if (retrievalId) {
     formData.append('retrievalId', retrievalId);
   }
   const res = await axios.delete(`${getUrl()}?id=${id}/retrievals`, formData);
@@ -105,35 +111,87 @@ const removeToolRetrieval = async (retrievalId, id) => {
 
 //this might work? not sure
 //I havent tested this functionality at all, this was a branch merged into mine from drews - willy
-const createUser = async(username, password) => {
-  let formData = new FormData();
-  formData.append('username', username);
-  formData.append('password', password);
-  const res = await axios.post(getUrlUser(), formData);
-  const { data } = res;
-  const user = await readTool(data._id); //change this for user data**************
-  return user;
-}
-
-const VerifyLogin = async (username, password) => {
-  const data = {
-    username: username,
-    password: password
+// this now works - Zach
+const createUser = async (username, password) => {
+  const payload = {
+    username,
+    password,
+  };
+  try {
+    const res = await axios.post(getUrlRegister(), payload);
+    const { data } = res;
+    return data;
+  } catch (error) {
+    throw new Error(error.response.data.message);
   }
+};
+
+const updateUser = async (id, username = undefined, password = undefined) => {
+  const payload = {
+    username,
+    password,
+  };
 
   try {
-    const res = await axios.post(getUrlUser(), data);
-    if (res.status === 200) {
-      return true;
-    }
-    else {
-      return false;
-    }
+    await axios.put(`${getUrlUser()}?id=${id}`, payload);
+  } catch (error) {
+    throw new Error(error.response.data.message);
   }
-  catch (e) {
-    console.error(e);
-  }
-  return false;
-}
+};
 
-export { readAllTools, deleteTool, createTool, readTool, updateTool, addToolRetrieval, updateToolRetrieval, removeToolRetrieval, VerifyLogin };
+const getUser = async (id) => {
+  try {
+    const { data } = await axios.get(`${getUrlUser()}?id=${id}`);
+    return data;
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+const getAllUsers = async () => {
+  try {
+    const { data } = await axios.get(getUrlUser());
+    return data;
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+const verifyLogin = async (username, password) => {
+  const payload = {
+    username,
+    password,
+  };
+
+  try {
+    const { data } = await axios.post(getUrlUser(), payload);
+    return data;
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+const deleteUser = async (id) => {
+  try {
+    await axios.delete(`${getUrlUser()}?id=${id}`);
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+export {
+  readAllTools,
+  deleteTool,
+  createTool,
+  readTool,
+  updateTool,
+  addToolRetrieval,
+  updateToolRetrieval,
+  removeToolRetrieval,
+  verifyLogin,
+  updateUser,
+  getUser,
+  getAllUsers,
+  createUser,
+  deleteUser,
+};

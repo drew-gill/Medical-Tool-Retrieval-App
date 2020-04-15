@@ -26,7 +26,7 @@ const SectionContainer = styled.section`
   box-sizing: border-box;
   border-radius: 5px;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-color: ${props =>
+  border-color: ${(props) =>
     props.error ? 'rgba(255, 0, 0, 0.5)' : 'rgba(0, 0, 0, 0.1)'};
 `;
 
@@ -65,18 +65,18 @@ const KeywordContainer = styled.div`
 `;
 
 // Styles
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   button: {
     position: 'fixed',
     right: 20,
-    bottom: 20
+    bottom: 20,
   },
   input: {
-    display: 'none'
+    display: 'none',
   },
   chip: {
-    margin: 5
-  }
+    margin: 5,
+  },
 }));
 
 const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
@@ -86,7 +86,7 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
   const [imgData, setImgData] = useState(null);
   const [img, setImg] = useState(null);
   const [keyInputValue, setKeyInputValue] = useState('');
-  const [keywords, setKeywords] = useState(['demo']);
+  const [keywords, setKeywords] = useState([]);
   const [error, setError] = useState(false);
 
   const variant = tool !== null && tool !== undefined ? 'edit' : 'add';
@@ -102,7 +102,15 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
   }, [tool]);
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    if (variant === 'edit') {
+      setKeywords(tool.keywords);
+      setImg(`data:image/jpg;base64, ${tool.image.toString('base64')}`);
+      setImgData(null);
+    }
+  };
+
   const handleAction = async () => {
     if (img !== null && keywords.length > 0) {
       setIsSubmitting(true);
@@ -115,21 +123,22 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
       if (variant !== 'edit') {
         setKeywords([]);
         setImg(null);
+        setOpen(false);
+      } else {
+        setOpen(false);
       }
-      // Close the modal
-      handleClose();
     } else {
       setError(true);
     }
   };
 
-  const handleKeyInputChange = e => {
+  const handleKeyInputChange = (e) => {
     setKeyInputValue(e.target.value);
   };
 
-  const handleDeleteKeyword = keyword => {
+  const handleDeleteKeyword = (keyword) => {
     const newKeywords = [];
-    keywords.forEach(k => {
+    keywords.forEach((k) => {
       if (k !== keyword) {
         newKeywords.push(k);
       }
@@ -168,7 +177,7 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
                 className={classes.input}
                 id='image-upload-input'
                 type='file'
-                onChange={e => {
+                onChange={(e) => {
                   setImgData(e.target.files[0]);
                   let reader = new FileReader();
                   reader.onloadend = () => {
@@ -178,7 +187,13 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
                 }}
               />
               <label htmlFor='image-upload-input'>
-                <Button variant='contained' color='primary' component='span'>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  component='span'
+                  disableRipple
+                  disableElevation
+                >
                   Upload An Image
                 </Button>
               </label>
@@ -192,7 +207,7 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
               style={{ marginTop: 10 }}
               noValidate
               autoComplete='off'
-              onSubmit={e => {
+              onSubmit={(e) => {
                 e.preventDefault();
                 if (keyInputValue) {
                   const newKeywords = keywords;

@@ -4,8 +4,10 @@ import styled from 'styled-components';
 
 // Custom components
 import { AuthContext } from '../../Auth';
+import LoadingView from '../../components/LoadingView';
 
 // Material UI
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
@@ -16,8 +18,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Styled components
 const RootContainer = styled.div`
-  margin: 20px;
-  margin-top: 120px;
+  padding-top: 120px;
+  padding-bottom: 40px;
 `;
 
 const ViewContainer = styled.div`
@@ -38,28 +40,44 @@ const BackButtonContainer = styled.div`
   left: 40px;
 `;
 
+// Styles
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& > *': {
+      margin: theme.spacing(1),
+    },
+  },
+}));
+
 const ToolView = () => {
+  const classes = useStyles();
   const authContext = useContext(AuthContext);
   const history = useHistory();
+  const [currUser, setCurrUser] = useState(undefined);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({
     username: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
   const [submitting, setSubmitting] = useState(false);
 
+  const loadInformation = async () => {
+    const user = await authContext.getUser();
+    setCurrUser(user);
+    setUsername(user.username);
+  };
+
   useEffect(() => {
-    authContext.refreshAuth();
-    setUsername(authContext.getUsername());
+    loadInformation();
   }, []);
 
   const goBack = () => history.goBack();
-  const handleUsername = e => setUsername(e.target.value);
-  const handlePassword = e => setPassword(e.target.value);
-  const handleConfirmPassword = e => setConfirmPassword(e.target.value);
+  const handleUsername = (e) => setUsername(e.target.value);
+  const handlePassword = (e) => setPassword(e.target.value);
+  const handleConfirmPassword = (e) => setConfirmPassword(e.target.value);
 
   const validate = () => {
     let _errors = { username: '', password: '', confirmPassword: '' };
@@ -82,30 +100,38 @@ const ToolView = () => {
       _errors['confirmPassword'] = 'Passwords must match.';
     }
     setErrors(_errors);
-    console.log(_errors);
     if (
       _errors['username'] !== '' ||
       _errors['password'] !== '' ||
       _errors['confirmPassword'] !== ''
     ) {
-      console.log('boo');
       return false;
     } else {
       return true;
     }
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
       // Update the user
       setSubmitting(true);
-      await authContext.updateCredentials(username, password);
+      try {
+        await authContext.updateCredentials(username, password);
+      } catch (error) {
+        setErrors({
+          username: error.message,
+        });
+      }
       setSubmitting(false);
       setPassword('');
       setConfirmPassword('');
     }
   };
+
+  if (currUser === undefined) {
+    return <LoadingView />;
+  }
 
   if (!authContext.authenticated) {
     history.replace('/Login');
@@ -122,7 +148,12 @@ const ToolView = () => {
       <Container maxWidth='xs'>
         <ViewContainer>
           <Typography variant='h6'>Account</Typography>
-          <form noValidate autoComplete='off' onSubmit={handleSubmit}>
+          <form
+            className={classes.root}
+            noValidate
+            autoComplete='off'
+            onSubmit={handleSubmit}
+          >
             <TextField
               variant='filled'
               margin='dense'
@@ -164,7 +195,7 @@ const ToolView = () => {
             ) : (
               <Button
                 style={{ marginTop: 10 }}
-                fullWidth
+                disableElevation
                 color='primary'
                 variant='contained'
                 type='submit'

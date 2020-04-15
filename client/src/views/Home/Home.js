@@ -17,7 +17,7 @@ import AddEditToolComponent from '../../components/AddEditToolComponent';
 
 // Styled components
 const RootContainer = styled.div`
-  margin: 40px;
+  padding: 40px 0;
 `;
 
 const TopBar = styled.div`
@@ -54,12 +54,12 @@ const Home = ({ toolData }) => {
     setData(toolData.data);
   };
 
-  const removeTool = async id => {
+  const removeTool = async (id) => {
     await toolData.deleteTool(id);
     setData(toolData.data);
   };
 
-  const selectTool = item => {
+  const selectTool = (item) => {
     setSelectedTool(item);
   };
 
@@ -81,13 +81,14 @@ const Home = ({ toolData }) => {
             disabled={data.length === 0}
             onClick={handleRefresh}
             endIcon={<ReplayRoundedIcon />}
+            disableElevation
           >
             Refresh
           </Button>
           {authContext.authenticated ? (
             <AccountMenu logout={authContext.logout} />
           ) : (
-            <Button color='primary' onClick={pushLogin}>
+            <Button color='primary' onClick={pushLogin} disableElevation>
               Login
             </Button>
           )}

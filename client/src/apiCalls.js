@@ -1,9 +1,7 @@
 import axios from 'axios';
-import record from "node-record-lpcm16";
+
 const devUrl = 'http://localhost:5000/api/';
 const prodUrl = 'https://cen3031-final-project.herokuapp.com/api/';
-
-
 
 const getUrl = () => {
   if (process.env.NODE_ENV === 'production') {
@@ -37,11 +35,5 @@ const readTool = async id => {
   const res = await axios.get(`${getUrl()}?id=${id}`);
   return res.data;
 };
-const recordAudio = async id => {
- 
- const x = await axios.post(`/record`);
-  
 
-};
-
-export { readAllTools, deleteTool, createTool, recordAudio };
+export { readAllTools, deleteTool, createTool };

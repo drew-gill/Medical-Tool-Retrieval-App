@@ -6,7 +6,7 @@ const toolController = require('../controllers/ToolsController.js'),
 
 const storage = multer.memoryStorage();
 const upload = multer({storage:storage});
-const record = require('../audioRecord.js');
+
 //creates a new object in the DB with the upload buffer object (the image with the filepath specified in a file parameter of the request) and the keywords in the request
 toolsRouter.post('/api/',upload.single('image'), toolController.create);
 
@@ -28,5 +28,5 @@ toolsRouter.delete('/api/:id',toolController.remove);
 //queries for the specific object given by the ID
 toolsRouter.get('/api/:id',toolController.read);
 
-toolsRouter.post('/record/',record.recordAudio);
+
 module.exports = toolsRouter;

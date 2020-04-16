@@ -5,10 +5,11 @@
   "dependencies": {
     "@material-ui/core": "^4.9.4",
     "@material-ui/icons": "^4.9.1",
-    "node-record-lpcm16": "git+https://github.com/rhclayto/node-record-lpcm16.git",
+    "node-record-lpcm16": "git+https://github.com/gillesdemey/node-record-lpcm16.git",
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
     "react-scripts": "^3.4.0",
+    "sox": "^0.1.0",
     "styled-components": "^5.0.1"
   },
   "scripts": {

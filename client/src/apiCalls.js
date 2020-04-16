@@ -39,9 +39,10 @@ const readTool = async id => {
 };
 const recordAudio = async id => {
  
- const x = await axios.post(`/record`);
-  
-
+  const x = await axios.post(`/record`);
+  console.log(x.data); //prints to the chrome console.
+  return x;
 };
 
 export { readAllTools, deleteTool, createTool, recordAudio };
+ 

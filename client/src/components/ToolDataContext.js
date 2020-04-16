@@ -40,17 +40,7 @@ class ToolData {
     });
     return res;
   };
-  updateToolAudio = async id => {
-    const res = await recordAudio(id);
-    let newData = this.data;
-    newData.forEach((d,index) =>{
-        if(d._id === id){
-          newData[index] = res;
-        }
-
-    });
-    return res;
-  };
+ 
   
   deleteTool = async id => {
     await deleteTool(id);

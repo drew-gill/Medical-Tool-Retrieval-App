@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-
+import styled, { keyframes } from 'styled-components';
+import {recordAudio} from "../apiCalls.js";
 // Material UI
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
@@ -145,7 +145,19 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
     });
     setKeywords(newKeywords);
   };
-
+  const handleAudio = async () => {
+      
+    const key = await recordAudio();
+    
+    const newKeywords = keywords;
+  
+    key.data.forEach((k) =>{
+          newKeywords.push(k);
+        });
+    
+    setKeywords(newKeywords);
+   
+};
   return (
     <React.Fragment>
       {/* Button */}
@@ -196,13 +208,16 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
                 >
                   Upload An Image
                 </Button>
+                
               </label>
             </UploadContainer>
           </SectionContainer>
           <SectionContainer error={error && keywords.length === 0}>
+          
             <InputLabel required error={error && keywords.length === 0}>
               Keywords
             </InputLabel>
+            
             <form
               style={{ marginTop: 10 }}
               noValidate
@@ -238,7 +253,19 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
                   color='primary'
                   onDelete={() => handleDeleteKeyword(word)}
                 />
-              ))}
+              ))
+              }
+              <Button 
+           variant='contained'
+           color='primary'
+           component='span'
+           disableRipple
+           disableElevation
+            onClick={()=>{
+              handleAudio();
+              setKeyInputValue(" a");
+            }}>Record Audio</Button>
+                
             </KeywordContainer>
           </SectionContainer>
         </DialogContent>
@@ -247,6 +274,7 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
             <CircularProgress />
           ) : (
             <React.Fragment>
+          
               <Button onClick={handleClose} color='primary'>
                 Cancel
               </Button>

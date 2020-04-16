@@ -14,7 +14,7 @@ import AccountMenu from '../../components/AccountMenu';
 import ToolDetailPopup from '../../components/ToolDetailPopup';
 import FilterAndViewComponent from '../../components/FilterAndViewComponent';
 import AddEditToolComponent from '../../components/AddEditToolComponent';
-import RecordComponent from '../../components/RecordComponent';
+
 
 // Styled components
 const RootContainer = styled.div`
@@ -107,7 +107,6 @@ const Home = ({ toolData }) => {
         close={() => setSelectedTool(null)}
         deleteFunction={removeTool}
       />
-      <RecordComponent/>
     </RootContainer>
   );
 };

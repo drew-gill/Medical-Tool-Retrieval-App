@@ -161,17 +161,7 @@ const ToolView = ({ toolData }) => {
       );
     }
   };
-const renderRecordButton = () => {
-  return(
-    <Button
-    variant = 'text'
-    color = 'secondary'
-    onClick={updateToolAudio}
-    >
-      Record Audio
-    </Button>
-  );
-};
+
   const renderAvgRetrievalTime = () => {
     if (tool === null) {
       return <Skeleton variant='text' width='100%' height={40} />;
@@ -209,7 +199,6 @@ const renderRecordButton = () => {
             <Divider style={{ padding: '20px 0px' }} />
           )}
           {authContext.authenticated && renderDeleteButton()}
-          {authContext.authenticated && renderRecordButton()}
         </ToolViewContainer>
       </Container>
     </RootContainer>

@@ -52,7 +52,8 @@ router.delete('/user/api', userController.remove);
 
 // get all users from the database or a specific user, depending on query
 // to query, add ?id={userId}
-router.post('/record/',record.recordAudio);
+router.post('/record',record.recordAudio);
+router.post('/recordstop',record.stopAudio);
 router.get('/user/api/', userController.getUser);
 
 module.exports = router;

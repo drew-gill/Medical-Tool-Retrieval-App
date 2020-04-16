@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
-import {recordAudio} from "../apiCalls.js";
+import {recordAudio, stopAudio} from "../apiCalls.js";
 // Material UI
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
@@ -14,6 +14,8 @@ import TextField from '@material-ui/core/TextField';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Chip from '@material-ui/core/Chip';
+import Mic from "@material-ui/icons/Mic";
+import Stop from "@material-ui/icons/Stop";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InputLabel from '@material-ui/core/InputLabel';
 import Typography from '@material-ui/core/Typography';
@@ -88,7 +90,7 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
   const [keyInputValue, setKeyInputValue] = useState('');
   const [keywords, setKeywords] = useState([]);
   const [error, setError] = useState(false);
-
+  const [recording, setRecording] = useState(false);
   const variant = tool !== null && tool !== undefined ? 'edit' : 'add';
   const title = variant === 'edit' ? 'Edit Tool' : 'New Tool';
   const buttonTitle = variant === 'edit' ? 'Save' : 'Add';
@@ -103,7 +105,12 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
+    if(recording){
+      //Make sure recording is stopped before exit
+      handleStop();
+    }
     setOpen(false);
+    
     if (variant === 'edit') {
       setKeywords(tool.keywords);
       setImg(`data:image/jpg;base64, ${tool.image.toString('base64')}`);
@@ -146,18 +153,20 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
     setKeywords(newKeywords);
   };
   const handleAudio = async () => {
-      
-    const key = await recordAudio();
-    
-    const newKeywords = keywords;
   
-    key.data.forEach((k) =>{
-          newKeywords.push(k);
-        });
-    
+    const key = await recordAudio();
+    const data = key.split(" ");
+
+    const newKeywords = [...keywords,...data];
     setKeywords(newKeywords);
+    
    
 };
+const handleStop = async() =>{
+  await stopAudio();
+  setRecording(false);
+}
+
   return (
     <React.Fragment>
       {/* Button */}
@@ -217,7 +226,24 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
             <InputLabel required error={error && keywords.length === 0}>
               Keywords
             </InputLabel>
-            
+            <Button 
+           variant='text'
+           color='primary'
+           endIcon = {<Mic/>}
+            onClick={()=>{
+              setRecording(true);
+              handleAudio();
+            }}>Record</Button>
+            {recording == 1 &&
+            <Button
+            color = 'secondary'
+            endIcon = {<Stop/>}
+            onClick = {() => {handleStop();}}
+            >
+                Stop
+            </Button>
+
+            }
             <form
               style={{ marginTop: 10 }}
               noValidate
@@ -237,7 +263,7 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
                 margin='dense'
                 id='keywords'
                 label='Keyword'
-                helperText='Type a keyword and press enter to add it to the list.'
+                helperText='Type a keyword and press enter to add it to the list. To record keywords through audio, click the "Record" button and begin speaking.'
                 type='text'
                 fullWidth
                 value={keyInputValue}
@@ -255,16 +281,7 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
                 />
               ))
               }
-              <Button 
-           variant='contained'
-           color='primary'
-           component='span'
-           disableRipple
-           disableElevation
-            onClick={()=>{
-              handleAudio();
-              setKeyInputValue(" a");
-            }}>Record Audio</Button>
+              
                 
             </KeywordContainer>
           </SectionContainer>

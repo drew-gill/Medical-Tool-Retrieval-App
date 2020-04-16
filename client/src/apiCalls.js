@@ -66,12 +66,16 @@ const readTool = async (id) => {
   return res.data;
 };
 const recordAudio = async () => {
-  console.log("Inside of recordAudio");
+  
   const res = await axios.post(`/record`);
-  res.data = res.data.split(' '); //prints to the chrome console
-  return res;
+ let data = res.data //prints to the chrome console
+  return data;
 };
+const stopAudio = async () => {
+  await axios.post('/recordstop');
+  return;
 
+}
 const addToolRetrieval = async (retrievalTime, id) => {
   const payload = { retrievalTime };
   const res = await axios.post(`${getUrl()}retrievals/?id=${id}`, payload);
@@ -198,5 +202,6 @@ export {
   getAllUsers,
   createUser,
   deleteUser,
-  recordAudio
+  recordAudio,
+  stopAudio
 };

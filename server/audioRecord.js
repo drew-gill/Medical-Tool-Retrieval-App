@@ -3,6 +3,7 @@ var recorder = require( "node-record-lpcm16");
 var fs = require('fs');
 const speech = require('@google-cloud/speech');
 const client = new speech.SpeechClient();
+var rec = 0;
 const request = {
     config: {
         encoding: 'LINEAR16',
@@ -12,13 +13,27 @@ const request = {
     single_utterance: true,
     interimResults:false,
 };
+const checkRec = (recording) => {
+    if(rec){
+        setTimeout(function(){checkRec(recording)},50);
+        
+    }
+    else{
+        recording.stop();
+    }
+}
 
-
+exports.stopAudio = async(req, res) =>{
+    console.log('inside of stopAudio');
+    
+    rec = 0;
+    return res.send({"data":1});
+}
 
 exports.recordAudio = async (req, res) => {
     
     let str;
-
+    rec = 1;
     const recognizeStream = client
     .streamingRecognize(request)
     .on('error',console.error)
@@ -39,10 +54,9 @@ exports.recordAudio = async (req, res) => {
     });
     recording.stream().pipe(recognizeStream);
     
- 
-    setTimeout(() => {
-        recording.stop();
-      }, 5000)
+    setTimeout(function(){checkRec(recording)},50);
+
+    
     
 }
 

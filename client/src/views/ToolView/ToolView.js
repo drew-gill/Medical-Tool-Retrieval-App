@@ -91,11 +91,7 @@ const ToolView = ({ toolData }) => {
     const res = await toolData.updateTool(image, keywords, id);
     setTool(res);
   };
-  const updateToolAudio = async () => {
-    const res = await toolData.updateToolAudio(id);
-    setTool(res);
- 
-  };
+  
   const addRetrieval = async (timePassed) => {
     console.log(tool);
     const res = await addToolRetrieval(timePassed, id);

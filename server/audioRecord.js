@@ -15,25 +15,35 @@ const request = {
 
 
 
-exports.recordAudio = async () => {
-    console.log("abc");
+exports.recordAudio = async (req, res) => {
     
+    let str;
+
     const recognizeStream = client
     .streamingRecognize(request)
     .on('error',console.error)
-    .on('data',data=>
-    console.log(data.results[0].alternatives[0].transcript));
+    .on('end', () =>{
+        return res.send(str);
+    })
+    .on('data',data=>{
+
+        str = data.results[0].alternatives[0].transcript;
+        console.log(str);
+    });
    
     const recording = recorder.record({
         sampleRateHerts: 16000,
         threshold:0,
         silence: '5.0',
+        endOnSilence: true
     });
     recording.stream().pipe(recognizeStream);
     console.log("listening, press Ctrl+C to stop");
  
+    setTimeout(() => {
+        recording.stop();
+      }, 5000)
     
-
 }
 
   

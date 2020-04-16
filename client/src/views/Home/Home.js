@@ -1,74 +1,105 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
 
 // Material UI
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import ReplayRoundedIcon from '@material-ui/icons/ReplayRounded';
 
 // Custom components
+import { withToolData } from '../../components/ToolDataContext';
+import { AuthContext } from '../../Auth';
+import AccountMenu from '../../components/AccountMenu';
 import ToolDetailPopup from '../../components/ToolDetailPopup';
 import FilterAndViewComponent from '../../components/FilterAndViewComponent';
-import AddToolComponent from '../../components/AddToolComponent';
+import AddEditToolComponent from '../../components/AddEditToolComponent';
 import RecordComponent from '../../components/RecordComponent';
-import { readAllTools, deleteTool, createTool } from '../../apiCalls';
 
 // Styled components
 const RootContainer = styled.div`
-  margin: 40px;
+  padding: 40px 0;
 `;
 
-const LoadingContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
+const TopBar = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
 `;
 
-const Home = () => {
-  const [data, setData] = useState(null);
+const ActionContainer = styled.div`
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+`;
+
+const Home = ({ toolData }) => {
+  const authContext = useContext(AuthContext);
+  const history = useHistory();
+  const [data, setData] = useState(toolData.data);
   const [selectedTool, setSelectedTool] = useState(null);
 
+  const fetchTools = async () => {
+    await toolData.fetchAllTools();
+    setData(toolData.data);
+  };
+
   useEffect(() => {
-    const fetch = async () => {
-      const res = await readAllTools();
-      setData(res);
-    };
-    fetch();
+    if (data.length === 0) {
+      fetchTools();
+    }
+    authContext.refreshAuth();
   }, []);
 
   const addTool = async (image, keywords) => {
-    const newTool = await createTool(image, keywords);
-    setData([...data, newTool]);
+    await toolData.createTool(image, keywords);
+    setData(toolData.data);
   };
 
-  const removeTool = async id => {
-    await deleteTool(id);
-    const newData = [];
-    data.forEach(d => {
-      if (d._id !== id) {
-        newData.push(d);
-      }
-    });
-    setData(newData);
+  const removeTool = async (id) => {
+    await toolData.deleteTool(id);
+    setData(toolData.data);
   };
 
-  const selectTool = item => {
+  const selectTool = (item) => {
     setSelectedTool(item);
   };
 
-  if (data === null) {
-    return (
-      <LoadingContainer>
-        <CircularProgress />
-      </LoadingContainer>
-    );
-  }
+  const pushLogin = () => history.push('/Login');
+
+  const handleRefresh = async () => {
+    setData([]);
+    await fetchTools();
+  };
 
   return (
     <RootContainer>
+      <TopBar>
+        <Typography variant='h4'>Tool Finder</Typography>
+        <ActionContainer>
+          <Button
+            color='primary'
+            style={{ marginRight: 5 }}
+            disabled={data.length === 0}
+            onClick={handleRefresh}
+            endIcon={<ReplayRoundedIcon />}
+            disableElevation
+          >
+            Refresh
+          </Button>
+          {authContext.authenticated ? (
+            <AccountMenu logout={authContext.logout} />
+          ) : (
+            <Button color='primary' onClick={pushLogin} disableElevation>
+              Login
+            </Button>
+          )}
+        </ActionContainer>
+      </TopBar>
       <FilterAndViewComponent data={data} selectFunction={selectTool} />
-      <RecordComponent/>
-      <AddToolComponent createFunction={addTool} />
+
+      {authContext.authenticated && (
+        <AddEditToolComponent actionButtonFunction={addTool} />
+      )}
 
       <ToolDetailPopup
         tool={selectedTool}
@@ -80,4 +111,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default withToolData(Home);

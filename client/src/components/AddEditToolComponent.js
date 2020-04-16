@@ -226,6 +226,7 @@ const handleStop = async() =>{
             <InputLabel required error={error && keywords.length === 0}>
               Keywords
             </InputLabel>
+            {recording == 0 &&
             <Button 
            variant='text'
            color='primary'
@@ -233,7 +234,7 @@ const handleStop = async() =>{
             onClick={()=>{
               setRecording(true);
               handleAudio();
-            }}>Record</Button>
+            }}>Record</Button>}
             {recording == 1 &&
             <Button
             color = 'secondary'

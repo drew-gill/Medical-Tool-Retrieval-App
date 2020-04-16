@@ -28,7 +28,7 @@ exports.recordAudio = async (req, res) => {
     .on('data',data=>{
 
         str = data.results[0].alternatives[0].transcript;
-        console.log(str);
+      
     });
    
     const recording = recorder.record({
@@ -38,7 +38,7 @@ exports.recordAudio = async (req, res) => {
         endOnSilence: true
     });
     recording.stream().pipe(recognizeStream);
-    console.log("listening, press Ctrl+C to stop");
+    
  
     setTimeout(() => {
         recording.stop();

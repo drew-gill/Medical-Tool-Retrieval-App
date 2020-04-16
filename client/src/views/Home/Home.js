@@ -107,6 +107,7 @@ const Home = ({ toolData }) => {
         close={() => setSelectedTool(null)}
         deleteFunction={removeTool}
       />
+      <RecordComponent/>
     </RootContainer>
   );
 };

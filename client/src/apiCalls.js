@@ -65,11 +65,16 @@ const readTool = async (id) => {
   const res = await axios.get(`${getUrl()}?id=${id}`);
   return res.data;
 };
-const recordAudio = async id => {
+const recordAudio = async (id) => {
  
-  const x = await axios.post(`/record`);
-  console.log(x.data); //prints to the chrome console.
-  return x;
+  const res = await axios.post(`/record`);
+  res.data = res.data.split(' '); //prints to the chrome console.
+  let formData = new FormData();
+  formData.append('keywords',JSON.stringify(res.data));
+  const res2 = await axios.put(`${getUrl()}?id=${id}`, formData);
+  const {data} = res2;
+  const tool = await readTool(data._id);
+  return tool;
 };
 
 const addToolRetrieval = async (retrievalTime, id) => {

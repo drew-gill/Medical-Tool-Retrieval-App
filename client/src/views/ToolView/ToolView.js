@@ -91,7 +91,11 @@ const ToolView = ({ toolData }) => {
     const res = await toolData.updateTool(image, keywords, id);
     setTool(res);
   };
-
+  const updateToolAudio = async () => {
+    const res = await toolData.updateToolAudio(id);
+    setTool(res);
+ 
+  };
   const addRetrieval = async (timePassed) => {
     console.log(tool);
     const res = await addToolRetrieval(timePassed, id);
@@ -157,7 +161,17 @@ const ToolView = ({ toolData }) => {
       );
     }
   };
-
+const renderRecordButton = () => {
+  return(
+    <Button
+    variant = 'text'
+    color = 'secondary'
+    onClick={updateToolAudio}
+    >
+      Record Audio
+    </Button>
+  );
+};
   const renderAvgRetrievalTime = () => {
     if (tool === null) {
       return <Skeleton variant='text' width='100%' height={40} />;
@@ -195,6 +209,7 @@ const ToolView = ({ toolData }) => {
             <Divider style={{ padding: '20px 0px' }} />
           )}
           {authContext.authenticated && renderDeleteButton()}
+          {authContext.authenticated && renderRecordButton()}
         </ToolViewContainer>
       </Container>
     </RootContainer>

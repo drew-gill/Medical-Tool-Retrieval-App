@@ -5,10 +5,11 @@
   "dependencies": {
     "@material-ui/core": "^4.9.4",
     "@material-ui/icons": "^4.9.1",
-"node-record-lpcm16": "git+https://github.com/gillesdemey/node-record-lpcm16.git",
     "@material-ui/lab": "^4.0.0-alpha.46",
+    "bcrypt": "^4.0.1",
     "chart.js": "^2.9.3",
     "moment": "^2.24.0",
+    "node-record-lpcm16": "git+https://github.com/gillesdemey/node-record-lpcm16.git",
     "numeral": "^2.0.6",
     "react": "^16.10.1",
     "react-chartjs-2": "^2.9.0",

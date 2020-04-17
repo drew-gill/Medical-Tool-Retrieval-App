@@ -19,6 +19,26 @@ import Pagination from '@material-ui/lab/Pagination';
 
 import { AuthContext } from '../Auth';
 
+// List of regex reserved characters
+const REGEX_RESERVED = [
+  '.',
+  '(',
+  ')',
+  '[',
+  ']',
+  '|',
+  '{',
+  '}',
+  '*',
+  '+',
+  '?',
+  '^',
+  '$',
+  '/',
+  '-',
+  '\\',
+];
+
 // Styled components
 const SearchBarForm = styled.form`
   display: flex;
@@ -133,7 +153,17 @@ const FilterAndViewComponent = ({ data }) => {
   };
 
   const handleSearchTermChange = (e) => {
-    setSearchTerm(e.target.value);
+    const value = e.target.value;
+    let passes = true;
+    // Search uses regex, so only allow characters not reserved by regex
+    REGEX_RESERVED.forEach((char) => {
+      if (value === char) {
+        passes = false;
+      }
+    });
+    if (passes) {
+      setSearchTerm(value);
+    }
   };
 
   const handleSelect = (item) => history.push(`/ToolView/${item._id}`);
@@ -174,7 +204,7 @@ const FilterAndViewComponent = ({ data }) => {
   return (
     <React.Fragment>
       <SearchSortContainer>
-        <SearchBarForm noValidate>
+        <SearchBarForm noValidate onSubmit={(e) => e.preventDefault()}>
           <TextField
             onChange={handleSearchTermChange}
             value={searchTerm}

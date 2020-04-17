@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import Auth, { AuthContext } from '../../Auth';
 import AddUserPopup from '../../components/AddUserPopup';
 import UserRow from '../../components/UserRow';
+import ConfirmDialog from '../../components/ConfirmDialog';
 
 // Material UI
 import Typography from '@material-ui/core/Typography';
@@ -51,12 +52,16 @@ const UsersView = () => {
   const history = useHistory();
   const [users, setUsers] = useState(undefined);
   const [popupOpen, setPopupOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState({});
 
   const goBack = () => history.goBack();
   const closePopup = () => setPopupOpen(false);
   const openPopup = () => setPopupOpen(true);
+  const openConfirm = (u) => setSelectedUser(u);
+  const closeConfirm = () => setSelectedUser({});
 
-  const deleteUser = async (u) => {
+  const deleteUser = async () => {
+    const u = selectedUser;
     // Delete the user and update the state
     await Auth.deleteUser(u._id);
     const newUsers = [];
@@ -66,6 +71,7 @@ const UsersView = () => {
       }
     });
     setUsers(newUsers);
+    setSelectedUser({});
   };
 
   const fetchUsers = async () => {
@@ -97,7 +103,7 @@ const UsersView = () => {
             </TableHead>
             <TableBody>
               {users.map((u) => (
-                <UserRow user={u} key={u._id} deleteUser={deleteUser} />
+                <UserRow user={u} key={u._id} deleteFunction={openConfirm} />
               ))}
             </TableBody>
           </Table>
@@ -117,6 +123,14 @@ const UsersView = () => {
           <ArrowBackRoundedIcon />
         </IconButton>
       </BackButtonContainer>
+
+      <ConfirmDialog
+        title={`Delete user ${selectedUser.username}?`}
+        description={`Are you sure that you want to delete user ${selectedUser.username}?`}
+        open={selectedUser.username !== undefined}
+        closeFunction={closeConfirm}
+        confirmFunction={deleteUser}
+      />
 
       <Fab
         style={{ position: 'fixed', bottom: 20, right: 20 }}

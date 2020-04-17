@@ -22,7 +22,8 @@ client/build
 /server/config/config.js
 /server/tests/UploadImages/
 
-
+.google.json
+.service_key.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

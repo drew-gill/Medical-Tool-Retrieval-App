@@ -31,19 +31,20 @@ exports.stopAudio = async(req, res) =>{
 }
 
 exports.recordAudio = async (req, res) => {
-    
+    console.log('in record audio');
     let str;
     rec = 1;
     const recognizeStream = client
     .streamingRecognize(request)
     .on('error',console.error)
     .on('end', () =>{
+        console.log('recording ended');
         return res.send(str);
     })
     .on('data',data=>{
-
+        
         str = data.results[0].alternatives[0].transcript;
-      
+        console.log(str);
     });
    
     const recording = recorder.record({

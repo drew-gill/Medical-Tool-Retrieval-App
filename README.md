@@ -52,3 +52,9 @@ On the frontend of the application, if any adjustments need to be made to the pr
 * On line 8, replace the url in single quotation marks (' ') with your preffered hosting service address in deployment status
 
 ## Project handoff guidelines ##
+For this project and the scale, it would be best to work with Heroku. However, some alternatives will be listed down below:
+* Back4App - https://www.back4app.com/ 
+* Firebase - https://firebase.google.com/
+* Google App Engine (GAE) - https://cloud.google.com/appengine
+* Kubernetes - https://kubernetes.io/
+* Amazon Elastic Compute Cloud (EC2) - https://aws.amazon.com/ec2/

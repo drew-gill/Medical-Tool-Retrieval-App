@@ -4,7 +4,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import Home from './views/Home/Home';
 import ToolView from './views/ToolView/ToolView';
 import AccountView from './views/AccountView/AccountView';
-import NotFound from './views/NotFound';
+import NotFound from './views/NotFound/NotFound';
 import Login from './views/Login/Login';
 import UsersView from './views/UsersView/UsersView';
 import LoadingView from './components/LoadingView';

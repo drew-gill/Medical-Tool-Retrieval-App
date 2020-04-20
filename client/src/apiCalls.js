@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const devUrl = 'http://localhost:5000/';
-const prodUrl = 'https://cen3031-final-project.herokuapp.com/';
+const devUrl = require('./config/config').dev.url;
+const prodUrl = require('./config/config').prod.url;
 
 //use for tool CRUD
 const getUrl = () => {

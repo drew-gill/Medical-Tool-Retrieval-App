@@ -17,9 +17,9 @@ On the frontend side fo the application, the path to the config file is CEN3031_
 config.js will contain the devURL and prodURL that will redirect the url for API requests if the project environment is being run in production mode or developement mode.
 ## List of APIs with Keys
 The three APIs and their respective information are listed below:
-1. CRUD
+1. REST API (CRUD) with MongoDB Atlas
    * Requires MongoDB uri in order to function properly
-2. Login Authentication
+2. User Authentication with BCrpyt and MongoDB Atlas
    * Requires MongoDB uri in order to function properly
 3. Chart.js
    * No key requried, just make sure to use `npm install` from the root folder

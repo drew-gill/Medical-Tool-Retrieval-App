@@ -146,6 +146,18 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
     setKeywords(newKeywords);
   };
 
+  const handleNewKeyword = (e) => {
+    e.preventDefault();
+    if (keyInputValue && keywords.indexOf(keyInputValue) === -1) {
+      const newKeywords = keywords;
+      newKeywords.push(keyInputValue);
+      setKeywords(newKeywords);
+      setKeyInputValue('');
+    } else {
+      setKeyInputValue('');
+    }
+  };
+
   return (
     <React.Fragment>
       {/* Button */}
@@ -207,15 +219,7 @@ const AddEditToolComponent = ({ actionButtonFunction, tool }) => {
               style={{ marginTop: 10 }}
               noValidate
               autoComplete='off'
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (keyInputValue) {
-                  const newKeywords = keywords;
-                  newKeywords.push(keyInputValue);
-                  setKeywords(newKeywords);
-                  setKeyInputValue('');
-                }
-              }}
+              onSubmit={handleNewKeyword}
             >
               <TextField
                 variant='filled'

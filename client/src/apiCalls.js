@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const devUrl = require('../config').devUrl;
-const prodUrl = require('../config').prodUrl;
+const devUrl = require('./config/config').dev.url;
+const prodUrl = require('./config/config').prod.url;
 
 //use for tool CRUD
 const getUrl = () => {

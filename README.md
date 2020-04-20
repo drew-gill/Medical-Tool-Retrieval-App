@@ -29,19 +29,19 @@ The following environmental variables should be considered:
 * process.env.Node_ENV
   * This could be in three possible states, development, staging and production
     * Development is for testing locally on your machine
-    * Production is for deploying on heroku
+    * Production is for deploying on Heroku
     * Staging is unused and should not be used
 * process.env.DB_URI
   * This contains the uri for the database
 
-## Log-in credentials
+## Login Credentials
 In order to login with admin privileges, the following credentials must be entered into the username and password section on the login page.
 * Username: admin
 * Password: password
 
 **This account is the master account which can manage all other created accounts**
 
-## File/Line replacement instructions for API keys ##
+## File/Line Replacement Instructions for API Keys ##
 On the backend of the application, from the root directory go to `/server/config/config.js`. 
 * On line 4, replace the uri in single quotation marks (' ') with your own MongoDB Atlas uri
 
@@ -51,18 +51,34 @@ On the frontend of the application, if any adjustments need to be made to the pr
 * On line 4, replace the url in single quotation marks (' ') with your preffered localhost port in development status
 * On line 8, replace the url in single quotation marks (' ') with your preffered hosting service address in deployment status
 
-## Project handoff guidelines ##
+## Project Handoff Guidelines ##
 For this project and the scale, it would be best to work with Heroku. However, some alternatives will be listed down below:
-* Back4App - https://www.back4app.com/
-  * No vendor lock-in
-  * Flexible pricing plans
-  * Automated backup system that keeps your data secure and accessible
-* Firebase - https://firebase.google.com/
-  * Cross-platform API, cross-device support
-  * Fast and real-time updates
-  * Free tier up to 100 simultaneous connections
 
-For a larger scale of deployment:
+Back4App - https://www.back4app.com/
+* No vendor lock-in
+* Flexible pricing plans
+* Automated backup system that keeps your data secure and accessible
+
+General steps to get setup:
+1. Create an account on back4app and create an application
+2. Use back4app's web hosting service in "My Apps' option of your app
+3. Create your domain and upload/make adjustments to incorporate back4app into your project
+4. Successfully hosted, for more in-depth information consult: https://www.back4app.com/docs/platform/node-js-web-server
+
+Firebase - https://firebase.google.com/
+* Cross-platform API, cross-device support
+* Fast and real-time updates
+* Free tier up to 100 simultaneous connections
+
+General steps to get setup:
+1. Create an account on Firebase and create an App
+2. Install the Firebase CLI
+3. Setup a project directory
+4. Deploy your site
+5. Link to a Firebase Web App (optional)
+6. Successfully hosted, for more in-depth information consult: https://firebase.google.com/docs/hosting/?authuser=0#implementation_path
+
+For a larger scale of deployment (some considerations, although unnecessary for the scale of this project):
 * Google App Engine (GAE) - https://cloud.google.com/appengine
   * Flexible pricing plans
   * Much easier to run asynchronous tasks

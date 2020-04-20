@@ -23,8 +23,6 @@ The three APIs and their respective information are listed below:
    * Requires MongoDB uri in order to function properly
 3. Chart.js
    * No key requried, just make sure to use `npm install` from the root folder
-4. Speech-to-Text
-   * Key information along with other important fields can be found within the service_key.json file
 
 ## Environmental Variables
 The following environmental variables should be considered:
@@ -35,10 +33,7 @@ The following environmental variables should be considered:
   * Staging is unused and should not be used
 * process.env.DB_URI
   * This contains the uri for the database
-* process.env.GCLOUD_PROJECT
-  * This sets the project as cen3031-final-project
-* process.env.GOOGLE_APPLICATION_CREDENTIALS
-    * This provides the path to the google api keys
+
 ## Log-in credentials
 In order to login with admin privledges, the following credentials must be entered into the username and password section on the login page.
 * Username: admin

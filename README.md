@@ -27,7 +27,7 @@ The three APIs and their respective information are listed below:
 ## Environmental Variables
 The following environmental variables should be considered:
 * process.env.Node_ENV
-  * This could be in three possible states, development, staging and production.
+  * This could be in three possible states, development, staging and production
     * Development is for testing locally on your machine
     * Production is for deploying on heroku
     * Staging is unused and should not be used
@@ -35,7 +35,7 @@ The following environmental variables should be considered:
   * This contains the uri for the database
 
 ## Log-in credentials
-In order to login with admin privledges, the following credentials must be entered into the username and password section on the login page.
+In order to login with admin privileges, the following credentials must be entered into the username and password section on the login page.
 * Username: admin
 * Password: password
 
@@ -53,8 +53,25 @@ On the frontend of the application, if any adjustments need to be made to the pr
 
 ## Project handoff guidelines ##
 For this project and the scale, it would be best to work with Heroku. However, some alternatives will be listed down below:
-* Back4App - https://www.back4app.com/ 
+* Back4App - https://www.back4app.com/
+  * No vendor lock-in
+  * Flexible pricing plans
+  * Automated backup system that keeps your data secure and accessible
 * Firebase - https://firebase.google.com/
+  * Cross-platform API, cross-device support
+  * Fast and real-time updates
+  * Free tier up to 100 simultaneous connections
+
+For a larger scale of deployment:
 * Google App Engine (GAE) - https://cloud.google.com/appengine
+  * Flexible pricing plans
+  * Much easier to run asynchronous tasks
+  * Easy to create, maintain and scale if needed
 * Kubernetes - https://kubernetes.io/
+  * Easy to deploy and manage applications
+  * No vendor lock-in
+  * Good for advanced developers to use the provided resources
 * Amazon Elastic Compute Cloud (EC2) - https://aws.amazon.com/ec2/
+  * Instant provisioning of new servers
+  * Multiple geographic areas to run servers with a standard interface
+  * Entire AWS ecosystem of services and support and community

@@ -10,6 +10,7 @@ import AddEditToolComponent from '../../components/AddEditToolComponent';
 import { addToolRetrieval } from '../../apiCalls';
 import RetrievalComponent from '../../components/RetrievalComponent';
 import RetrievalChart from '../../components/RetrievalChart';
+import ConfirmDialog from '../../components/ConfirmDialog';
 
 // Material UI
 import Typography from '@material-ui/core/Typography';
@@ -63,7 +64,7 @@ const BackButtonContainer = styled.div`
 const ToolView = ({ toolData }) => {
   const authContext = useContext(AuthContext);
   const [tool, setTool] = useState(null);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const history = useHistory();
   const { id } = useParams();
 
@@ -80,10 +81,12 @@ const ToolView = ({ toolData }) => {
 
   const goBack = () => history.goBack();
 
+  const openConfirm = () => setConfirmOpen(true);
+  const closeConfirm = () => setConfirmOpen(false);
+
   const deleteTool = async () => {
-    setIsDeleting(true);
     await toolData.deleteTool(id);
-    setIsDeleting(false);
+    closeConfirm();
     goBack();
   };
 
@@ -142,20 +145,16 @@ const ToolView = ({ toolData }) => {
   };
 
   const renderDeleteButton = () => {
-    if (isDeleting) {
-      return <CircularProgress />;
-    } else {
-      return (
-        <Button
-          variant='text'
-          color='secondary'
-          endIcon={<DeleteRoundedIcon />}
-          onClick={deleteTool}
-        >
-          Delete
-        </Button>
-      );
-    }
+    return (
+      <Button
+        variant='text'
+        color='secondary'
+        endIcon={<DeleteRoundedIcon />}
+        onClick={openConfirm}
+      >
+        Delete
+      </Button>
+    );
   };
 
   const renderAvgRetrievalTime = () => {
@@ -182,6 +181,14 @@ const ToolView = ({ toolData }) => {
       {authContext.authenticated && (
         <AddEditToolComponent tool={tool} actionButtonFunction={updateTool} />
       )}
+
+      <ConfirmDialog
+        title='Delete this tool?'
+        description='Are you sure that you want to delete this tool?'
+        open={confirmOpen}
+        closeFunction={closeConfirm}
+        confirmFunction={deleteTool}
+      />
 
       <Container maxWidth='md'>
         <ToolViewContainer>

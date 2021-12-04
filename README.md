@@ -15,7 +15,7 @@ On the frontend side fo the application, the path to the config file is `/client
 * config.js
 
 config.js will contain the devURL and prodURL that will redirect the url for API requests if the project environment is being run in production mode or development mode.
-## List of APIs with Keys
+## List of APIs with Keys 
 The three APIs and their respective information are listed below:
 1. REST API (CRUD) with MongoDB Atlas
    * Requires MongoDB uri in order to function properly
